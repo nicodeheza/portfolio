@@ -15,17 +15,98 @@ gsap.registerPlugin(ScrollTrigger);
 export default function ThreeBk(){
     const sceneContainer= useRef(null);
     const reqAnimFrame= useRef(null);
+    const workerRef= useRef();
 
     useEffect(()=>{
-        let modelLoaded= false;
-        let bodyMeshLoaded= false;
-        let shapeLoaded= false;
-        //cannon
-        const world= new CANNON.World({gravity:new CANNON.Vec3(0,0,0)});
-        //three
+        const timeStep= 1 / 60;
+        const numOfShapes= 15;
+
+        const shapes= [];
+
+        let positions= new Float32Array(numOfShapes * 3);
+        let quaternions= new Float32Array(numOfShapes * 4);
+
+        workerRef.current= new Worker(new URL("../../workers/physics.js", import.meta.url));
+        // Time when we sent last message
+        let sendTime;
+        // Send the array buffers that will be populated in the
+        // worker with cannon.js' data
+        function requestDataFromWorker(){
+            sendTime= performance.now();
+            workerRef.current.postMessage(
+                {
+                    timeStep,
+                    positions, 
+                    quaternions
+                }, 
+                [positions.buffer, quaternions.buffer]
+            );
+        }
+        // The mutated position and quaternion data we
+        // get back from the worker
+        workerRef.current.onmessage= (e)=>{
+            if(e.data.type === "forms"){
+                const colors=["#a55369", "#005bb1", "#5db100"];
+                const forms= e.data.forms;
+                forms.forEach((form, i)=>{
+                    const newParticle= createParticle(
+                                        colors[ i % colors.length],
+                                        form
+                                        );
+                    shapes.push(newParticle);
+                    scene.add(newParticle.particle);
+                    scene.add(newParticle.outline);
+                    scene.add(newParticle.transparent);
+                });
+            }else{
+                positions= e.data.positions;
+                quaternions= e.data.quaternions;
+    
+                // Update the three.js meshes
+                for(let i=0; i<shapes.length; i++){
+                    const p= shapes[i];
+                    p.particle.position.set(positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2]);
+                    p.particle.quaternion.set(
+                        quaternions[i * 4 + 0],
+                        quaternions[i * 4 + 1],
+                        quaternions[i * 4 + 2],
+                        quaternions[i * 4 + 3]
+                    );
+                    p.transparent.position.set(p.particle.position.x + p.offset[0],
+                    p.particle.position.y + p.offset[1],
+                    p.particle.position.z + p.offset[2]);
+                    p.transparent.quaternion.set(
+                        quaternions[i * 4 + 0],
+                        quaternions[i * 4 + 1],
+                        quaternions[i * 4 + 2],
+                        quaternions[i * 4 + 3]
+                    );
+                    p.outline.position.copy(p.transparent.position);
+                    p.outline.quaternion.set(
+                        quaternions[i * 4 + 0],
+                        quaternions[i * 4 + 1],
+                        quaternions[i * 4 + 2],
+                        quaternions[i * 4 + 3]
+                    );
+                }
+    
+                // Delay the next step by the amount of timeStep remaining,
+                // otherwise run it immediatly
+                const delay= timeStep * 1000  - (performance.now() - sendTime);
+                setTimeout(requestDataFromWorker, Math.max(delay, 0));
+            }
+        }
+
+        workerRef.current.addEventListener('error', (event) => {
+            console.error(event.message)
+        });
+      
+        // let modelLoaded= false;
+        // let bodyMeshLoaded= false;
+        // let shapeLoaded= false;
+    
         const dev= true;
         const aspectRatio= window.innerWidth / window.innerHeight;
-        const particles= [];
         const scene= new THREE.Scene();
         const camera= new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
         const renderer= new THREE.WebGLRenderer({alpha:true});
@@ -33,7 +114,8 @@ export default function ThreeBk(){
         renderer.setSize(window.innerWidth, window.innerHeight);
         sceneContainer.current.appendChild(renderer.domElement);
 
-        cannonDebugger(scene, world.bodies);
+        //cannonDebugger(scene, bodies);
+        //workerRef.current.postMessage(scene);
 
 
         let controls;
@@ -48,42 +130,7 @@ export default function ThreeBk(){
         loader.load('block02.glb', gltf=>{
             gltf.scene.scale.set(2,2,2);
             scene.add(gltf.scene);
-            modelLoaded= true;
-        });
-
-        const bDist= 5;
-        const boundariesData=[
-            {
-                rotation:{x:degToRad(-90), y:0, z:0},
-                position:{x:0, y:-bDist, z:0}
-            },
-            {
-                rotation:{x:0, y:0, z:0},
-                position:{x:0, y:0, z:-bDist}
-            },
-            {
-                rotation:{x:degToRad(180), y:0, z:0},
-                position:{x:0, y:0, z:bDist}
-            },
-            {
-                rotation:{x:degToRad(90), y:0, z:0},
-                position:{x:0, y:bDist, z:0}
-            },
-            {
-                rotation:{x:0, y:degToRad(90), z:0},
-                position:{x:-bDist, y:0, z:0}
-            },
-            {
-                rotation:{x:0, y:degToRad(-90), z:0},
-                position:{x:bDist, y:0, z:0}
-            }
-            
-        ];
-        boundariesData.forEach(data=>{
-            const boundaries= new CANNON.Body({mass:0, shape: new CANNON.Plane()});
-            boundaries.quaternion.setFromEuler(data.rotation.x, data.rotation.y, data.rotation.z);
-            boundaries.position.set(data.position.x, data.position.y, data.position.z);
-            world.addBody(boundaries);
+            //modelLoaded= true;
         });
 
         
@@ -92,36 +139,8 @@ export default function ThreeBk(){
         dimensions= (x,z,y);
         position=((x*2), (z*2), (y*2)*-1);
         */
-       fetch("body2.json")
-       .then(res=> res.json())
-       .then(data=>{ 
-           //console.log(data);
-           data.boxes.forEach(box=>{
-               const boxBody= new CANNON.Body({
-                    mass:0, 
-                    shape: new CANNON.Box(new CANNON.Vec3(box.dimensions.x, box.dimensions.y, box.dimensions.z))
-                });
-                boxBody.position.set(box.location.x, box.location.y, box.location.z);
-                world.addBody(boxBody);
-            });
-            bodyMeshLoaded= true;
 
-            const colors=["#a55369", "#005bb1", "#5db100"];
-            const shape= ["sphere", "cylinder", "cone"];
-            for(let i=0; i< 15; i++){
-                const newParticle= createParticle(
-                    colors[ i % colors.length],
-                    shape[Math.floor( Math.random() * 3)]);
-                particles.push(newParticle);
-                scene.add(newParticle.particle);
-                scene.add(newParticle.outline);
-                scene.add(newParticle.transparent);
-            }
-            shapeLoaded= true;
-        });
-
-        
-        
+              
         if(dev){
             const axes= new THREE.AxesHelper(5);
             scene.add(axes);
@@ -606,41 +625,16 @@ export default function ThreeBk(){
         }
 
 
-        const timeStep= 1 / 60;
-        let lastCallTime;
+        requestDataFromWorker();
+       // const timeStep= 1 / 60;
+        //let lastCallTime;
         function animate(){
             reqAnimFrame.current= requestAnimationFrame(animate);
-
-            //cannon
-            const time= performance.now();
-            if(modelLoaded && bodyMeshLoaded && shapeLoaded){
-                //console.log("started");
-                if(!lastCallTime){
-                    world.step(timeStep);
-                }else{
-                    const dt= time - lastCallTime;
-                    world.step(timeStep, dt);
-                }
-            }
-
-            particles.forEach(p=>{
-                p.particle.position.copy(p.body.position);
-                p.particle.quaternion.copy(p.body.quaternion);
-                p.transparent.position.set(p.particle.position.x + p.offset[0],
-                                           p.particle.position.y + p.offset[1],
-                                           p.particle.position.z + p.offset[2]);
-                p.transparent.quaternion.copy(p.body.quaternion);
-                p.outline.position.copy(p.transparent.position);
-                p.outline.quaternion.copy(p.body.quaternion);
-            });
-            
             if(dev){
                 controls.update();
             }
             
-            
             renderer.render(scene, camera);
-            lastCallTime= time;
         }
         animate(); 
 
@@ -649,70 +643,13 @@ export default function ThreeBk(){
         }
 
         function createParticle(color, shape){
-            function getRandomPos(num){
-                return {
-                    x:THREE.MathUtils.randFloatSpread(num),
-                    y:THREE.MathUtils.randFloatSpread(num),
-                    z:THREE.MathUtils.randFloatSpread(num)
-                } 
-            }
-            function getDist(x1, x2, y1, y2, z1, z2){
-                const powDisX= Math.pow((x1 - x2), 2);
-                const powDisY= Math.pow((y1 - y2), 2);
-                const powDisZ= Math.pow((z1 - z2), 2);
-                return Math.sqrt((powDisX + powDisY + powDisZ));
-            }
-           function randomAng(){
-               const n= Math.floor(Math.random() * 361);
-               if(Math.random() < 0.5){
-                   return n *-1; 
-               }else{
-                   return n;
-               }
-           }
-           function randomNum(min, max ){
-               return Math.random() * (max - min) + min;
-           }
-
-
-            const body= new CANNON.Body({
-                mass:0.5, 
-                shape: shape === "sphere" ? 
-                new CANNON.Sphere(0.25) :
-                shape === "cone" ? 
-                new CANNON.Cylinder(0, 0.25, 0.5, 36) :
-                new CANNON.Cylinder(0.10, 0.10, 0.5, 25)  
-            });
-            const num= 7;
-            let pos= getRandomPos(num);
-            const minDist= 1.5;
-            for(let i=0; i< world.bodies.length; i++){
-                const b= world.bodies[i];
-                //console.log(b);
-                const dist= getDist(pos.x, b.position.x, pos.y, b.position.y, pos.z, b.position.z);
-                //console.log(dist)
-                if(dist < minDist){
-                    console.log("recal");
-                    pos= getRandomPos(num);
-                    i=0;
-                }
-            }
-            body.position.set(pos.x, pos.y, pos.z);
-            //console.log(body);
-            body.quaternion.setFromEuler(randomAng(), randomAng(), randomAng());
-            //body.applyForce(new CANNON.Vec3(randomNum(-0.7, 0.8),randomNum(-0.7, 0.8),randomNum(-0.7, 0.8)), new CANNON.Vec3(0,0,0));
-            //body.applyImpulse(new CANNON.Vec3(randomNum(-0.1, 0.2),randomNum(-0.1, 0.2),randomNum(-0.1, 0.2)), new CANNON.Vec3(0,0,0));
-            body.applyLocalImpulse(new CANNON.Vec3(randomNum(-0.1, 0.2),randomNum(-0.1, 0.2),randomNum(-0.1, 0.2)), new CANNON.Vec3(0,0,0));
-            body.linearDamping= 0;
-            body.angularDamping= 0;
-            world.addBody(body);
-
+           
             const geometry=shape === "sphere" ? new THREE.SphereBufferGeometry(0.25, 32, 16) :
             shape === "cone" ? new THREE.ConeGeometry(0.25, 0.5, 36) :
             new THREE.CylinderGeometry(0.10, 0.10, 0.5, 25);
             const material= new THREE.MeshStandardMaterial({color: color, roughness:0.4});
             const particle= new THREE.Mesh(geometry, material);
-            particle.position.copy(body.position);
+            //particle.position.copy(body.position);
 
             const transparentMaterial= new THREE.MeshBasicMaterial({color:"#fff", transparent: true, opacity: 0});
             const transparent= new THREE.Mesh(geometry, transparentMaterial);
@@ -724,20 +661,21 @@ export default function ThreeBk(){
                     offset.push(0.02);
                 }
             }
-            transparent.position.set(particle.position.x + offset[0], particle.position.y + offset[1], particle.position.z + offset[2]);
+           // transparent.position.set(particle.position.x + offset[0], particle.position.y + offset[1], particle.position.z + offset[2]);
 
             const outlineMaterial= new THREE.MeshBasicMaterial({color:"#000", side: THREE.BackSide, transparent: true});
             const outline= new THREE.Mesh(geometry, outlineMaterial);
             outline.renderOrder=1;
-            outline.position.set(transparent.position.x, transparent.position.y, transparent.position.z );
+            //outline.position.set(transparent.position.x, transparent.position.y, transparent.position.z );
             outline.scale.multiplyScalar(1.15);
 
-            return {particle, outline, offset, transparent, body};
+            return {particle, outline, offset, transparent};
         }
 
-    
-
-        return ()=> cancelAnimationFrame(reqAnimFrame.current);
+        return ()=>{
+            cancelAnimationFrame(reqAnimFrame.current);
+            workerRef.current.terminate();
+        };
     },[]);
     
 
