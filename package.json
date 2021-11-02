@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "cannon-es": "^0.18.0",
     "gsap": "^3.8.0",
     "next": "11.1.2",
     "react": "17.0.2",
@@ -16,6 +17,7 @@
     "three": "^0.133.1"
   },
   "devDependencies": {
+    "cannon-es-debugger": "^0.1.4",
     "eslint": "8.0.1",
     "eslint-config-next": "11.1.2"
   }
