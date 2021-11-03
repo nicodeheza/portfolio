@@ -38,8 +38,7 @@ export default function ThreeBk(){
                 [positions.buffer, quaternions.buffer]
             );
         }
-        // The mutated position and quaternion data we
-        // get back from the worker
+        
         workerRef.current.onmessage= (e)=>{
             if(e.data.type === "forms"){
                 const forms= e.data.forms;
@@ -59,15 +58,15 @@ export default function ThreeBk(){
 
                 forms.forEach((form, i)=>{
                     const geo= geometry[form];
-                    const newParticle= createParticle(material[ i % material.length],geo);
-                    shapes.push(newParticle);
-                    scene.add(newParticle.particle);
-                    scene.add(newParticle.outline);
-                    scene.add(newParticle.transparent);
+                    createParticle(material[ i % material.length],geo);
                 });
+
                 renderBoundaries(e.data.boundariesData);
                 requestDataFromWorker();
+
             }else{
+                // The mutated position and quaternion data we
+                // get back from the worker
                 positions= e.data.positions;
                 quaternions= e.data.quaternions;
 
@@ -642,18 +641,11 @@ export default function ThreeBk(){
             return deg * (Math.PI / 180 );
         }
 
-        
+
         const transparentMaterial= new THREE.MeshBasicMaterial({color:"#fff", transparent: true, opacity: 0});
         const outlineMaterial= new THREE.MeshBasicMaterial({color:"#000", side: THREE.BackSide, transparent: true});
         function createParticle(material, geometry){
-
-            // const geometry=shape === "sphere" ? new THREE.SphereBufferGeometry(0.25, 32, 16) :
-            // shape === "cone" ? new THREE.ConeGeometry(0.25, 0.5, 36) :
-            // new THREE.CylinderGeometry(0.10, 0.10, 0.5, 25);
-            // const material= new THREE.MeshStandardMaterial({color: color, roughness:0.4});
             const particle= new THREE.Mesh(geometry, material);
-            //particle.position.copy(body.position);
-
             const transparent= new THREE.Mesh(geometry, transparentMaterial);
             const offset=[];
             for(let i=0; i<3; i++){
@@ -667,7 +659,10 @@ export default function ThreeBk(){
             outline.renderOrder=1;
             outline.scale.multiplyScalar(1.15);
 
-            return {particle, outline, offset, transparent};
+            shapes.push({particle, outline, offset, transparent});
+            scene.add(particle);
+            scene.add(outline);
+            scene.add(transparent);
         }
 
         function renderBoundaries(boundariesData){
