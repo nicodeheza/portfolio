@@ -18,11 +18,7 @@ export default function ThreeBk(){
     useEffect(()=>{
         const timeStep= 1 / 60;
         let numOfShapes;
-
         const shapes= [];
-
-        // let positions= new Float32Array(numOfShapes * 3);
-        // let quaternions= new Float32Array(numOfShapes * 4);
         let positions;
         let quaternions;
 
@@ -36,9 +32,9 @@ export default function ThreeBk(){
             workerRef.current.postMessage(
                 {
                     timeStep,
-                    positions, 
+                    positions,
                     quaternions
-                }, 
+                },
                 [positions.buffer, quaternions.buffer]
             );
         }
@@ -46,13 +42,24 @@ export default function ThreeBk(){
         // get back from the worker
         workerRef.current.onmessage= (e)=>{
             if(e.data.type === "forms"){
-                const colors=["#a55369", "#005bb1", "#5db100"];
                 const forms= e.data.forms;
                 numOfShapes = forms.length;
                 positions= new Float32Array(numOfShapes * 3);
                 quaternions= new Float32Array(numOfShapes * 4);
+
+                const geometry ={
+                                sphere: new THREE.SphereBufferGeometry(0.25, 32, 16),
+                                cone: new THREE.ConeGeometry(0.25, 0.5, 36),
+                                cylinder: new THREE.CylinderGeometry(0.10, 0.10, 0.5, 25)
+                                };
+
+                const material= [new THREE.MeshStandardMaterial({color: "#a55369", roughness:0.4}),
+                                new THREE.MeshStandardMaterial({color:  "#005bb1", roughness:0.4}),
+                                new THREE.MeshStandardMaterial({color: "#5db100", roughness:0.4}),];
+
                 forms.forEach((form, i)=>{
-                    const newParticle= createParticle(colors[ i % colors.length],form);
+                    const geo= geometry[form];
+                    const newParticle= createParticle(material[ i % material.length],geo);
                     shapes.push(newParticle);
                     scene.add(newParticle.particle);
                     scene.add(newParticle.outline);
@@ -63,7 +70,7 @@ export default function ThreeBk(){
             }else{
                 positions= e.data.positions;
                 quaternions= e.data.quaternions;
-    
+
                 // Update the three.js meshes
                 for(let i=0; i<shapes.length; i++){
                     const p= shapes[i];
@@ -91,7 +98,7 @@ export default function ThreeBk(){
                         quaternions[i * 4 + 3]
                     );
                 }
-    
+
                 // Delay the next step by the amount of timeStep remaining,
                 // otherwise run it immediatly
                 const delay= timeStep * 1000  - (performance.now() - sendTime);
@@ -102,11 +109,8 @@ export default function ThreeBk(){
         workerRef.current.addEventListener('error', (event) => {
             console.error(event.message)
         });
-      
-        // let modelLoaded= false;
-        // let bodyMeshLoaded= false;
-        // let shapeLoaded= false;
-    
+
+        //three 
         const dev= true;
         const aspectRatio= window.innerWidth / window.innerHeight;
         const scene= new THREE.Scene();
@@ -116,33 +120,28 @@ export default function ThreeBk(){
         renderer.setSize(window.innerWidth, window.innerHeight);
         sceneContainer.current.appendChild(renderer.domElement);
 
-        //cannonDebugger(scene, bodies);
-        //workerRef.current.postMessage(scene);
-
-
         let controls;
         if(dev){
             controls = new OrbitControls( camera, renderer.domElement );
             camera.position.set( 0, 0, 10 );
             controls.update();
         }
-        
+
 
         const loader= new GLTFLoader();
         loader.load('block02.glb', gltf=>{
             gltf.scene.scale.set(2,2,2);
             scene.add(gltf.scene);
-            //modelLoaded= true;
         });
 
-        
+
         /*
         blender to cannon esc x2:
         dimensions= (x,z,y);
         position=((x*2), (z*2), (y*2)*-1);
         */
 
-              
+
         if(dev){
             const axes= new THREE.AxesHelper(5);
             scene.add(axes);
@@ -168,27 +167,27 @@ export default function ThreeBk(){
                 scene.add(lightHelper);
             }
         });
-        
+
 
         //console.log(aspectRatio);
         if(!dev){
         if(aspectRatio > 1){
-            
+
             const animateProps={posX: 2.08,
                 posY:-0.12,
                 posZ:4.2,
-                rotX:0, 
+                rotX:0,
                 rotY:0,
                 rotZ:0
             };
-            ScrollTrigger.defaults({ 
-                scrub: true, 
+            ScrollTrigger.defaults({
+                scrub: true,
                 snap: {
-                    snapTo:1 , 
+                    snapTo:1 ,
                     duration:3,
                     ease:"power1.out"
                 },
-                markers: true, 
+                markers: true,
                onUpdate:()=>{
                  camera.position.set(animateProps.posX, animateProps.posY, animateProps.posZ);
                  camera.rotation.set(animateProps.rotX, animateProps.rotY, animateProps.rotZ);
@@ -197,16 +196,16 @@ export default function ThreeBk(){
             });
 
            camera.position.set(animateProps.posX, animateProps.posY, animateProps.posZ);
-    
+
            //home - project 1
            const tl1= gsap.timeline();
            ScrollTrigger.create({
-               trigger: "#t1", 
-              animation: tl1, 
+               trigger: "#t1",
+              animation: tl1,
            });
             tl1
             .to(animateProps, {
-                duration: 0.5, 
+                duration: 0.5,
                 posZ: 0.8,
                 posY:1.3,
                 posX:1.5,
@@ -237,43 +236,43 @@ export default function ThreeBk(){
                 duration:1,
                 rotY: Math.PI
             }, "first-rot");
-    
-            //project 1 - project 2 
+
+            //project 1 - project 2
             const tl2= gsap.timeline();
             ScrollTrigger.create({
-                trigger: "#t2",  
+                trigger: "#t2",
                animation: tl2
             });
             tl2
             .to(animateProps, {
-                duration:0.5, 
+                duration:0.5,
                 posZ: -10,
                 ease:"none"
             })
             .to(animateProps, {
-                duration:0.5, 
+                duration:0.5,
                 rotX: degToRad(-90),
                 posY: -10,
                 posZ: 0,
                 ease:"none"
             })
             .to(animateProps, {
-                duration:0.5, 
+                duration:0.5,
                 rotZ: degToRad(180),
                 ease:"none"
             })
             .to(animateProps, {
-                duration:0.5, 
-                posY:-5.4, 
+                duration:0.5,
+                posY:-5.4,
                 posZ:1.3,
                 posX:0,
                 ease:"none"
             })
-    
+
             //project 2 - project 3
             const tl3= gsap.timeline();
             ScrollTrigger.create({
-                trigger: "#t3",  
+                trigger: "#t3",
                animation: tl3
             });
             tl3
@@ -297,11 +296,11 @@ export default function ThreeBk(){
                 rotX: degToRad(-180),
                 ease:"none"
             });
-    
+
             //project 3 - project menu
             const tl4= gsap.timeline();
             ScrollTrigger.create({
-                trigger: "#t4",  
+                trigger: "#t4",
                animation: tl4
             });
             tl4
@@ -326,22 +325,22 @@ export default function ThreeBk(){
                 posZ:0.1,
                 ease:"none"
             })
-            .to(animateProps,{ 
+            .to(animateProps,{
                 rotY: degToRad(180),
                 posY:-3,
                 ease:"none"
             })
-            .to(animateProps,{ 
+            .to(animateProps,{
                 posY:-5.4,
                 posZ:1.3,
                 posX:0.05,
                 ease:"none"
             });
-    
+
             //project menu - about
             const tl5= gsap.timeline();
             ScrollTrigger.create({
-                trigger: "#t5",  
+                trigger: "#t5",
                animation: tl5
             });
             tl5
@@ -370,14 +369,14 @@ export default function ThreeBk(){
                 posZ:1.3,
                 ease:"none"
             });
-    
+
             //about - contact
             const tl6= gsap.timeline();
             ScrollTrigger.create({
-                trigger: "#t6",  
+                trigger: "#t6",
                animation: tl6
             });
-    
+
             tl6
             .to(animateProps, {
                 rotZ: degToRad(-90),
@@ -401,19 +400,19 @@ export default function ThreeBk(){
             const animateProps={posX: 2.35,
                 posY:-0.12,
                 posZ:4.2,
-                rotX:0, 
+                rotX:0,
                 rotY:0,
                 rotZ:0
                 };
 
-            ScrollTrigger.defaults({ 
-                scrub: true, 
+            ScrollTrigger.defaults({
+                scrub: true,
                 snap: {
-                    snapTo:1 , 
+                    snapTo:1 ,
                     duration:3,
                     ease:"power1.out"
                 },
-                markers: true, 
+                markers: true,
                onUpdate:()=>{
                  camera.position.set(animateProps.posX, animateProps.posY, animateProps.posZ);
                  camera.rotation.set(animateProps.rotX, animateProps.rotY, animateProps.rotZ);
@@ -426,12 +425,12 @@ export default function ThreeBk(){
             //home - project 1
             const tl1= gsap.timeline();
             ScrollTrigger.create({
-            trigger: "#t1", 
-            animation: tl1, 
+            trigger: "#t1",
+            animation: tl1,
             });
             tl1
             .to(animateProps, {
-            duration: 0.5, 
+            duration: 0.5,
             posZ: 0.8,
             posY:1.3,
             posX:1.5,
@@ -463,33 +462,33 @@ export default function ThreeBk(){
             rotY: Math.PI
             }, "first-rot");
 
-            //project 1 - project 2 
+            //project 1 - project 2
             const tl2= gsap.timeline();
             ScrollTrigger.create({
-            trigger: "#t2",  
+            trigger: "#t2",
             animation: tl2
             });
             tl2
             .to(animateProps, {
-            duration:0.5, 
+            duration:0.5,
             posZ: -10,
             ease:"none"
             })
             .to(animateProps, {
-            duration:0.5, 
+            duration:0.5,
             rotX: degToRad(-90),
             posY: -10,
             posZ: 0,
             ease:"none"
             })
             .to(animateProps, {
-            duration:0.5, 
+            duration:0.5,
             rotZ: degToRad(180),
             ease:"none"
             })
             .to(animateProps, {
-            duration:0.5, 
-            posY:-5.4, 
+            duration:0.5,
+            posY:-5.4,
             posZ:1.3,
             posX: 1.15,
             ease:"none"
@@ -498,7 +497,7 @@ export default function ThreeBk(){
             //project 2 - project 3
             const tl3= gsap.timeline();
             ScrollTrigger.create({
-            trigger: "#t3",  
+            trigger: "#t3",
             animation: tl3
             });
             tl3
@@ -526,7 +525,7 @@ export default function ThreeBk(){
             //project 3 - project menu
             const tl4= gsap.timeline();
             ScrollTrigger.create({
-            trigger: "#t4",  
+            trigger: "#t4",
             animation: tl4
             });
             tl4
@@ -551,12 +550,12 @@ export default function ThreeBk(){
             posZ:0.1,
             ease:"none"
             })
-            .to(animateProps,{ 
+            .to(animateProps,{
             rotY: degToRad(180),
             posY:-3,
             ease:"none"
             })
-            .to(animateProps,{ 
+            .to(animateProps,{
             posY:-5.4,
             posZ:1.3,
             posX:1.15,
@@ -566,7 +565,7 @@ export default function ThreeBk(){
             //project menu - about
             const tl5= gsap.timeline();
             ScrollTrigger.create({
-            trigger: "#t5",  
+            trigger: "#t5",
             animation: tl5
             });
             tl5
@@ -599,7 +598,7 @@ export default function ThreeBk(){
             //about - contact
             const tl6= gsap.timeline();
             ScrollTrigger.create({
-            trigger: "#t6",  
+            trigger: "#t6",
             animation: tl6
             });
 
@@ -626,33 +625,35 @@ export default function ThreeBk(){
         }
         }
 
-    
+
         //requestDataFromWorker();
-   
+
         function animate(){
             reqAnimFrame.current= requestAnimationFrame(animate);
             if(dev){
                 controls.update();
             }
-            
+
             renderer.render(scene, camera);
         }
-        animate(); 
+        animate();
 
         function degToRad(deg){
             return deg * (Math.PI / 180 );
         }
 
-        function createParticle(color, shape){
-           
-            const geometry=shape === "sphere" ? new THREE.SphereBufferGeometry(0.25, 32, 16) :
-            shape === "cone" ? new THREE.ConeGeometry(0.25, 0.5, 36) :
-            new THREE.CylinderGeometry(0.10, 0.10, 0.5, 25);
-            const material= new THREE.MeshStandardMaterial({color: color, roughness:0.4});
+        
+        const transparentMaterial= new THREE.MeshBasicMaterial({color:"#fff", transparent: true, opacity: 0});
+        const outlineMaterial= new THREE.MeshBasicMaterial({color:"#000", side: THREE.BackSide, transparent: true});
+        function createParticle(material, geometry){
+
+            // const geometry=shape === "sphere" ? new THREE.SphereBufferGeometry(0.25, 32, 16) :
+            // shape === "cone" ? new THREE.ConeGeometry(0.25, 0.5, 36) :
+            // new THREE.CylinderGeometry(0.10, 0.10, 0.5, 25);
+            // const material= new THREE.MeshStandardMaterial({color: color, roughness:0.4});
             const particle= new THREE.Mesh(geometry, material);
             //particle.position.copy(body.position);
 
-            const transparentMaterial= new THREE.MeshBasicMaterial({color:"#fff", transparent: true, opacity: 0});
             const transparent= new THREE.Mesh(geometry, transparentMaterial);
             const offset=[];
             for(let i=0; i<3; i++){
@@ -662,12 +663,8 @@ export default function ThreeBk(){
                     offset.push(0.02);
                 }
             }
-           // transparent.position.set(particle.position.x + offset[0], particle.position.y + offset[1], particle.position.z + offset[2]);
-
-            const outlineMaterial= new THREE.MeshBasicMaterial({color:"#000", side: THREE.BackSide, transparent: true});
             const outline= new THREE.Mesh(geometry, outlineMaterial);
             outline.renderOrder=1;
-            //outline.position.set(transparent.position.x, transparent.position.y, transparent.position.z );
             outline.scale.multiplyScalar(1.15);
 
             return {particle, outline, offset, transparent};
@@ -675,7 +672,7 @@ export default function ThreeBk(){
 
         function renderBoundaries(boundariesData){
             const material= new THREE.MeshBasicMaterial({color:"green", wireframe: true});
-            const planeGeometry= new THREE.PlaneGeometry(10,10); 
+            const planeGeometry= new THREE.PlaneGeometry(10,10);
             boundariesData.forEach(data=>{
                 const {rotation, position}= data;
                 const planeMesh= new  THREE.Mesh(planeGeometry, material);
@@ -691,7 +688,7 @@ export default function ThreeBk(){
             workerRef.current.terminate();
         };
     },[]);
-    
+
 
     return(
         <div ref={sceneContainer} className={styles.three}>
