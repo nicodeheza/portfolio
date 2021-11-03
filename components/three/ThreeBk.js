@@ -1,11 +1,9 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import * as CANNON from "cannon-es";
+// import * as CANNON from "cannon-es";
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
-import {mergeVertices} from "three/examples/jsm/utils/BufferGeometryUtils";
-import { ConvexGeometry } from 'three/examples/jsm/geometries/ConvexGeometry'
-import cannonDebugger from "cannon-es-debugger";
+// import cannonDebugger from "cannon-es-debugger";
 import {gsap} from "gsap";
 import {ScrollTrigger} from "gsap/dist/ScrollTrigger";
 import styles from "./threeBk.module.css";
@@ -19,12 +17,14 @@ export default function ThreeBk(){
 
     useEffect(()=>{
         const timeStep= 1 / 60;
-        const numOfShapes= 15;
+        let numOfShapes;
 
         const shapes= [];
 
-        let positions= new Float32Array(numOfShapes * 3);
-        let quaternions= new Float32Array(numOfShapes * 4);
+        // let positions= new Float32Array(numOfShapes * 3);
+        // let quaternions= new Float32Array(numOfShapes * 4);
+        let positions;
+        let quaternions;
 
         workerRef.current= new Worker(new URL("../../workers/physics.js", import.meta.url));
         // Time when we sent last message
@@ -48,16 +48,18 @@ export default function ThreeBk(){
             if(e.data.type === "forms"){
                 const colors=["#a55369", "#005bb1", "#5db100"];
                 const forms= e.data.forms;
+                numOfShapes = forms.length;
+                positions= new Float32Array(numOfShapes * 3);
+                quaternions= new Float32Array(numOfShapes * 4);
                 forms.forEach((form, i)=>{
-                    const newParticle= createParticle(
-                                        colors[ i % colors.length],
-                                        form
-                                        );
+                    const newParticle= createParticle(colors[ i % colors.length],form);
                     shapes.push(newParticle);
                     scene.add(newParticle.particle);
                     scene.add(newParticle.outline);
                     scene.add(newParticle.transparent);
                 });
+                renderBoundaries(e.data.boundariesData);
+                requestDataFromWorker();
             }else{
                 positions= e.data.positions;
                 quaternions= e.data.quaternions;
@@ -624,10 +626,9 @@ export default function ThreeBk(){
         }
         }
 
-
-        requestDataFromWorker();
-       // const timeStep= 1 / 60;
-        //let lastCallTime;
+    
+        //requestDataFromWorker();
+   
         function animate(){
             reqAnimFrame.current= requestAnimationFrame(animate);
             if(dev){
@@ -670,6 +671,19 @@ export default function ThreeBk(){
             outline.scale.multiplyScalar(1.15);
 
             return {particle, outline, offset, transparent};
+        }
+
+        function renderBoundaries(boundariesData){
+            const material= new THREE.MeshBasicMaterial({color:"green", wireframe: true});
+            const planeGeometry= new THREE.PlaneGeometry(10,10); 
+            boundariesData.forEach(data=>{
+                const {rotation, position}= data;
+                const planeMesh= new  THREE.Mesh(planeGeometry, material);
+                planeMesh.position.set(position.x, position.y, position.z);
+                planeMesh.rotation.set(rotation.x, rotation.y, rotation.z);
+
+                scene.add(planeMesh);
+            });
         }
 
         return ()=>{

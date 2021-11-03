@@ -9,36 +9,36 @@ const forms=[];
 const world= new CANNON.World({gravity:new CANNON.Vec3(0,0,0)});
 
 //add boundaries
-const bDist= 5;
 const boundariesData=[
     {
         rotation:{x:degToRad(-90), y:0, z:0},
-        position:{x:0, y:-bDist, z:0}
+        position:{x:0, y:-4, z:0}
     },
     {
-                rotation:{x:0, y:0, z:0},
-                position:{x:0, y:0, z:-bDist}
+        rotation:{x:0, y:0, z:0},
+        position:{x:0, y:0, z:-5}
     },
     {
         rotation:{x:degToRad(180), y:0, z:0},
-        position:{x:0, y:0, z:bDist}
+        position:{x:0, y:0, z:5}
     },
     {
         rotation:{x:degToRad(90), y:0, z:0},
-        position:{x:0, y:bDist, z:0}
+        position:{x:0, y:3.5, z:0}
     },
     {
         rotation:{x:0, y:degToRad(90), z:0},
-        position:{x:-bDist, y:0, z:0}
+        position:{x:-4, y:0, z:0}
     },
     {
         rotation:{x:0, y:degToRad(-90), z:0},
-        position:{x:bDist, y:0, z:0}
+        position:{x:4, y:0, z:0}
     }
             
 ];
+const plane= new CANNON.Plane();
 boundariesData.forEach(data=>{
-    const boundaries= new CANNON.Body({mass:0, shape: new CANNON.Plane()});
+    const boundaries= new CANNON.Body({mass:0, shape: plane});
     boundaries.quaternion.setFromEuler(data.rotation.x, data.rotation.y, data.rotation.z);
     boundaries.position.set(data.position.x, data.position.y, data.position.z);
     world.addBody(boundaries);
@@ -53,26 +53,50 @@ Body.boxes.forEach(box=>{
     boxBody.position.set(box.location.x, box.location.y, box.location.z);
     world.addBody(boxBody);
 });
-//bodyMeshLoaded= true;
 
 // add shapes
-const shape= ["sphere", "cylinder", "cone"];
-for(let i=0; i< 15; i++){
-    createParticle(shape[Math.floor( Math.random() * 3)]);
+const shape= [
+    {type:"sphere", geometry: new CANNON.Sphere(0.25)}, 
+    {type:"cone", geometry: new CANNON.Cylinder(0, 0.25, 0.5, 36)}, 
+    {type:"cylinder", geometry: new CANNON.Cylinder(0.10, 0.10, 0.5, 25)}
+]; 
+for(let i=0; i< 20; i++){
+    createParticle(shape[Math.floor(Math.random() * 3)], );
 }
 postMessage({
     type: "forms", 
+    boundariesData,
     forms
 });
-//shapeLoaded= true;
 
-
-    
-
+  
 addEventListener("message", (e)=>{
     const {positions, quaternions, timeStep}= e.data;
 
     world.step(timeStep);
+    const maxSpeed= 0.2;
+    world.bodies.forEach(body=>{
+        //console.log(body.velocity)
+        if(body.velocity.x > maxSpeed){
+            body.velocity.x = maxSpeed;
+        }
+        if(body.velocity.y > maxSpeed){
+            body.velocity.y = maxSpeed;
+        }
+        if(body.velocity.z > maxSpeed){
+            body.velocity.z = maxSpeed;
+        }
+
+        if(body.velocity.x < maxSpeed * -1){
+            body.velocity.x = maxSpeed * -1;
+        }
+        if(body.velocity.y < maxSpeed * -1){
+            body.velocity.y = maxSpeed * -1;
+        }
+        if(body.velocity.z < maxSpeed * -1){
+            body.velocity.z = maxSpeed  *-1;
+        }
+    });
 
     // Copy the cannon.js data into the buffers
     for( let i=0; i< shapes.length; i++){
@@ -94,7 +118,6 @@ addEventListener("message", (e)=>{
     [positions.buffer, quaternions.buffer]);
 });
 
-
 function createParticle(shape){
     function getRandomPos(num){
         return {
@@ -102,12 +125,6 @@ function createParticle(shape){
             y:MathUtils.randFloatSpread(num),
             z:MathUtils.randFloatSpread(num)
         } 
-    }
-    function getDist(x1, x2, y1, y2, z1, z2){
-        const powDisX= Math.pow((x1 - x2), 2);
-        const powDisY= Math.pow((y1 - y2), 2);
-        const powDisZ= Math.pow((z1 - z2), 2);
-        return Math.sqrt((powDisX + powDisY + powDisZ));
     }
    function randomAng(){
        const n= Math.floor(Math.random() * 361);
@@ -121,30 +138,14 @@ function createParticle(shape){
        return Math.random() * (max - min) + min;
    }
 
-   forms.push(shape);
+   forms.push(shape.type);
 
     const body= new CANNON.Body({
         mass:0.5, 
-        shape: shape === "sphere" ? 
-        new CANNON.Sphere(0.25) :
-        shape === "cone" ? 
-        new CANNON.Cylinder(0, 0.25, 0.5, 36) :
-        new CANNON.Cylinder(0.10, 0.10, 0.5, 25)  
+        shape: shape.geometry 
     });
     const num= 7;
     let pos= getRandomPos(num);
-    const minDist= 1.5;
-    for(let i=0; i< world.bodies.length; i++){
-        const b= world.bodies[i];
-        //console.log(b);
-        const dist= getDist(pos.x, b.position.x, pos.y, b.position.y, pos.z, b.position.z);
-        //console.log(dist)
-        if(dist < minDist){
-            console.log("recal");
-            pos= getRandomPos(num);
-            i=0;
-        }
-    }
     body.position.set(pos.x, pos.y, pos.z);
     //console.log(body);
     body.quaternion.setFromEuler(randomAng(), randomAng(), randomAng());
@@ -155,6 +156,7 @@ function createParticle(shape){
     body.angularDamping= 0;
     world.addBody(body);
     shapes.push(body);
+
 }
 
 function degToRad(deg){
