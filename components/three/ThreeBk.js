@@ -62,9 +62,9 @@ export default function ThreeBk(){
                     createParticle(material[ i % material.length],geo);
                 });
 
-                if(dev){
-                    renderBoundaries(e.data.boundariesData);
-                }
+                // if(dev){
+                //     renderBoundaries(e.data.boundariesData);
+                // }
                 requestDataFromWorker();
 
             }else{
@@ -144,10 +144,10 @@ export default function ThreeBk(){
         */
 
 
-        if(dev){
-            const axes= new THREE.AxesHelper(5);
-            scene.add(axes);
-        }
+        // if(dev){
+        //     const axes= new THREE.AxesHelper(5);
+        //     scene.add(axes);
+        // }
 
 
         const ambientLight= new THREE.AmbientLight("#fff", 0.2);
@@ -172,36 +172,40 @@ export default function ThreeBk(){
 
       
         //console.log(aspectRatio);
-        if(!dev){
+        //if(!dev){
+
+        let animateProps;
+        const scrollDefault={
+            scrub: true,
+            // snap: {
+            //     snapTo:1 ,
+            //     duration:3,
+            //     ease:"power1.out"
+            // },
+            //snap:1 / 10, 
+            snap: {
+                snapTo:1 / 3 ,
+                duration: 3/ 3,
+                ease:"power1.out"
+            },
+            // markers: true,
+           onUpdate:()=>{
+             camera.position.set(animateProps.posX, animateProps.posY, animateProps.posZ);
+             camera.rotation.set(animateProps.rotX, animateProps.rotY, animateProps.rotZ);
+             //console.log(animateProps);
+            }
+        }
+
         if(aspectRatio > 1){
 
-            const animateProps={posX: 2.08,
+            animateProps= {posX: 2.08,
                 posY:-0.12,
                 posZ:4.2,
                 rotX:0,
                 rotY:0,
                 rotZ:0
             };
-            ScrollTrigger.defaults({
-                scrub: true,
-                // snap: {
-                //     snapTo:1 ,
-                //     duration:3,
-                //     ease:"power1.out"
-                // },
-                //snap:1 / 10, 
-                snap: {
-                    snapTo:1 / 3 ,
-                    duration: 3/ 3,
-                    ease:"power1.out"
-                },
-                // markers: true,
-               onUpdate:()=>{
-                 camera.position.set(animateProps.posX, animateProps.posY, animateProps.posZ);
-                 camera.rotation.set(animateProps.rotX, animateProps.rotY, animateProps.rotZ);
-                 //console.log(animateProps);
-             }
-            });
+            ScrollTrigger.defaults(scrollDefault);
 
            camera.position.set(animateProps.posX, animateProps.posY, animateProps.posZ);
 
@@ -405,28 +409,15 @@ export default function ThreeBk(){
                 ease:"none"
             });
         }else{
-            const animateProps={posX: 2.35,
+            animateProps={posX: 2.35,
                 posY:-0.12,
                 posZ:4.2,
                 rotX:0,
                 rotY:0,
                 rotZ:0
-                };
+            };
 
-            ScrollTrigger.defaults({
-                scrub: true,
-                snap: {
-                    snapTo:1 ,
-                    duration:3,
-                    ease:"power1.out"
-                },
-                markers: true,
-               onUpdate:()=>{
-                 camera.position.set(animateProps.posX, animateProps.posY, animateProps.posZ);
-                 camera.rotation.set(animateProps.rotX, animateProps.rotY, animateProps.rotZ);
-                // console.log(animateProps);
-             }
-            });
+            ScrollTrigger.defaults(scrollDefault);
 
             camera.position.set(animateProps.posX, animateProps.posY, animateProps.posZ);
 
@@ -631,7 +622,7 @@ export default function ThreeBk(){
             });
 
         }
-        }
+       // }
 
 
         //raycaster
@@ -649,9 +640,9 @@ export default function ThreeBk(){
           
         function animate(){
             reqAnimFrame.current= requestAnimationFrame(animate);
-            if(dev){
-                controls.update();
-            }
+            // if(dev){
+            //     controls.update();
+            // }
 
             //raycaster
             // update the picking ray with the camera and mouse position
@@ -706,18 +697,18 @@ export default function ThreeBk(){
             scene.add(transparent);
         }
 
-        function renderBoundaries(boundariesData){
-            const material= new THREE.MeshBasicMaterial({color:"green", wireframe: true});
-            const planeGeometry= new THREE.PlaneGeometry(10,10);
-            boundariesData.forEach(data=>{
-                const {rotation, position}= data;
-                const planeMesh= new  THREE.Mesh(planeGeometry, material);
-                planeMesh.position.set(position.x, position.y, position.z);
-                planeMesh.rotation.set(rotation.x, rotation.y, rotation.z);
+        // function renderBoundaries(boundariesData){
+        //     const material= new THREE.MeshBasicMaterial({color:"green", wireframe: true});
+        //     const planeGeometry= new THREE.PlaneGeometry(10,10);
+        //     boundariesData.forEach(data=>{
+        //         const {rotation, position}= data;
+        //         const planeMesh= new  THREE.Mesh(planeGeometry, material);
+        //         planeMesh.position.set(position.x, position.y, position.z);
+        //         planeMesh.rotation.set(rotation.x, rotation.y, rotation.z);
 
-                scene.add(planeMesh);
-            });
-        }
+        //         scene.add(planeMesh);
+        //     });
+        // }
 
         window.addEventListener('mousemove', onMouseMove, false );
         return ()=>{
