@@ -69,53 +69,93 @@ postMessage({
     forms
 });
 
+//add mouse body
+const mouseBody= new CANNON.Body({
+    mass: 10, 
+    shape: new CANNON.Sphere(0.2)
+});
+mouseBody.sleep();
+world.addBody(mouseBody);
+
   
 addEventListener("message", (e)=>{
-    const {positions, quaternions, timeStep}= e.data;
+    if(e.data.type === "update"){
+        const {positions, quaternions, timeStep}= e.data;
+    
+        world.step(timeStep);
+        const maxSpeed= 0.5;
+        world.bodies.forEach(body=>{
+            //velocity
+            if(body.velocity.x > maxSpeed){
+                body.velocity.x = maxSpeed;
+            }
+            if(body.velocity.y > maxSpeed){
+                body.velocity.y = maxSpeed;
+            }
+            if(body.velocity.z > maxSpeed){
+                body.velocity.z = maxSpeed;
+            }
+    
+            if(body.velocity.x < maxSpeed * -1){
+                body.velocity.x = maxSpeed * -1;
+            }
+            if(body.velocity.y < maxSpeed * -1){
+                body.velocity.y = maxSpeed * -1;
+            }
+            if(body.velocity.z < maxSpeed * -1){
+                body.velocity.z = maxSpeed  *-1;
+            }
+            //angular velocity
+            if(body.angularVelocity.x > maxSpeed){
+                body.angularVelocity.x = maxSpeed;
+            }
+            if(body.angularVelocity.y > maxSpeed){
+                body.angularVelocity.y = maxSpeed;
+            }
+            if(body.angularVelocity.z > maxSpeed){
+                body.angularVelocity.z = maxSpeed;
+            }
+    
+            if(body.angularVelocity.x < maxSpeed * -1){
+                body.angularVelocity.x = maxSpeed * -1;
+            }
+            if(body.angularVelocity.y < maxSpeed * -1){
+                body.angularVelocity.y = maxSpeed * -1;
+            }
+            if(body.angularVelocity.z < maxSpeed * -1){
+                body.angularVelocity.z = maxSpeed  * -1;
+            }
 
-    world.step(timeStep);
-    const maxSpeed= 0.2;
-    world.bodies.forEach(body=>{
-        //console.log(body.velocity)
-        if(body.velocity.x > maxSpeed){
-            body.velocity.x = maxSpeed;
+        });
+    
+        // Copy the cannon.js data into the buffers
+        for( let i=0; i< shapes.length; i++){
+            const shape= shapes[i];
+    
+            positions[i * 3 + 0]= shape.position.x;
+            positions[i * 3 + 1]= shape.position.y;
+            positions[i * 3 + 2]= shape.position.z;
+            quaternions[i * 4 + 0]= shape.quaternion.x;
+            quaternions[i * 4 + 1]= shape.quaternion.y;
+            quaternions[i * 4 + 2]= shape.quaternion.z;
+            quaternions[i * 4 + 3]= shape.quaternion.w;
         }
-        if(body.velocity.y > maxSpeed){
-            body.velocity.y = maxSpeed;
-        }
-        if(body.velocity.z > maxSpeed){
-            body.velocity.z = maxSpeed;
-        }
+        postMessage({
+            type:"pos-qua", 
+            positions, 
+            quaternions
+        }, 
+        [positions.buffer, quaternions.buffer]);
 
-        if(body.velocity.x < maxSpeed * -1){
-            body.velocity.x = maxSpeed * -1;
+        if(mouseBody.sleepState === 0){
+            mouseBody.sleep();
         }
-        if(body.velocity.y < maxSpeed * -1){
-            body.velocity.y = maxSpeed * -1;
-        }
-        if(body.velocity.z < maxSpeed * -1){
-            body.velocity.z = maxSpeed  *-1;
-        }
-    });
-
-    // Copy the cannon.js data into the buffers
-    for( let i=0; i< shapes.length; i++){
-        const shape= shapes[i];
-
-        positions[i * 3 + 0]= shape.position.x;
-        positions[i * 3 + 1]= shape.position.y;
-        positions[i * 3 + 2]= shape.position.z;
-        quaternions[i * 4 + 0]= shape.quaternion.x;
-        quaternions[i * 4 + 1]= shape.quaternion.y;
-        quaternions[i * 4 + 2]= shape.quaternion.z;
-        quaternions[i * 4 + 3]= shape.quaternion.w;
+    }else {
+        const {x,y,z} = e.data;
+        //console.log(x);
+        mouseBody.wakeUp();
+        mouseBody.position.set(x,y,z);
     }
-    postMessage({
-        type:"pos-qua", 
-        positions, 
-        quaternions
-    }, 
-    [positions.buffer, quaternions.buffer]);
 });
 
 function createParticle(shape){

@@ -31,6 +31,7 @@ export default function ThreeBk(){
             sendTime= performance.now();
             workerRef.current.postMessage(
                 {
+                    type: "update", 
                     timeStep,
                     positions,
                     quaternions
@@ -167,7 +168,7 @@ export default function ThreeBk(){
             }
         });
 
-
+      
         //console.log(aspectRatio);
         if(!dev){
         if(aspectRatio > 1){
@@ -625,13 +626,44 @@ export default function ThreeBk(){
         }
 
 
-        //requestDataFromWorker();
+        //raycaster
+        const raycaster= new THREE.Raycaster();
+        const mouse= new THREE.Vector2();
+        function onMouseMove( event ) {
 
+            // calculate mouse position in normalized device coordinates
+            // (-1 to +1) for both components
+        
+            mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+            mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        
+        }
+          
         function animate(){
             reqAnimFrame.current= requestAnimationFrame(animate);
             if(dev){
                 controls.update();
             }
+
+            //raycaster
+            // update the picking ray with the camera and mouse position
+	        raycaster.setFromCamera( mouse, camera );
+            // calculate objects intersecting the picking ray
+	        const intersects = raycaster.intersectObjects( scene.children );
+            //console.log(intersects);
+
+	        for ( let i = 0; i < intersects.length; i ++ ) {
+                if(intersects[i].object.name === "p"){
+                   // console.log(intersects[i]);
+                    workerRef.current.postMessage({
+                        type:"intersect", 
+                        x: intersects[i].point.x,
+                        y: intersects[i].point.y, 
+                        z: intersects[i].point.z
+                    });
+                }
+		        //intersects[ i ].object.material.color.set( 0xff0000 );
+	        }
 
             renderer.render(scene, camera);
         }
@@ -646,6 +678,7 @@ export default function ThreeBk(){
         const outlineMaterial= new THREE.MeshBasicMaterial({color:"#000", side: THREE.BackSide, transparent: true});
         function createParticle(material, geometry){
             const particle= new THREE.Mesh(geometry, material);
+            particle.name= "p";
             const transparent= new THREE.Mesh(geometry, transparentMaterial);
             const offset=[];
             for(let i=0; i<3; i++){
@@ -678,9 +711,11 @@ export default function ThreeBk(){
             });
         }
 
+        window.addEventListener('mousemove', onMouseMove, false );
         return ()=>{
             cancelAnimationFrame(reqAnimFrame.current);
             workerRef.current.terminate();
+            window.removeEventListener('mousemove', onMouseMove, false );
         };
     },[]);
 
