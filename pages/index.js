@@ -10,7 +10,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ThreeBk />
-      {/* <div className={styles.home}/>
+      <div className={styles.home}/>
       <div className={styles.transition} id="t1"/> 
       <div className={styles.project}/> 
       <div className={styles.transition} id="t2"/> 
@@ -22,7 +22,7 @@ export default function Home() {
       <div className={styles.transition} id="t5"/> 
       <div className={styles.about}/>
       <div className={styles.transition} id="t6"/> 
-      <div className={styles.contact}/> */}
+      <div className={styles.contact}/>
       
     </div>
   )

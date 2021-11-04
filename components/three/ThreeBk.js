@@ -62,7 +62,9 @@ export default function ThreeBk(){
                     createParticle(material[ i % material.length],geo);
                 });
 
-                renderBoundaries(e.data.boundariesData);
+                if(dev){
+                    renderBoundaries(e.data.boundariesData);
+                }
                 requestDataFromWorker();
 
             }else{
@@ -111,7 +113,7 @@ export default function ThreeBk(){
         });
 
         //three 
-        const dev= true;
+        const dev= false;
         const aspectRatio= window.innerWidth / window.innerHeight;
         const scene= new THREE.Scene();
         const camera= new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
@@ -182,12 +184,18 @@ export default function ThreeBk(){
             };
             ScrollTrigger.defaults({
                 scrub: true,
+                // snap: {
+                //     snapTo:1 ,
+                //     duration:3,
+                //     ease:"power1.out"
+                // },
+                //snap:1 / 10, 
                 snap: {
-                    snapTo:1 ,
-                    duration:3,
+                    snapTo:1 / 3 ,
+                    duration: 3/ 3,
                     ease:"power1.out"
                 },
-                markers: true,
+                // markers: true,
                onUpdate:()=>{
                  camera.position.set(animateProps.posX, animateProps.posY, animateProps.posZ);
                  camera.rotation.set(animateProps.rotX, animateProps.rotY, animateProps.rotZ);

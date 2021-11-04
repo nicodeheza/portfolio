@@ -56,11 +56,11 @@ Body.boxes.forEach(box=>{
 
 // add shapes
 const shape= [
-    {type:"sphere", geometry: new CANNON.Sphere(0.25)}, 
+    {type:"sphere", geometry: new CANNON.Sphere(0.25)},
     {type:"cone", geometry: new CANNON.Cylinder(0, 0.25, 0.5, 36)}, 
     {type:"cylinder", geometry: new CANNON.Cylinder(0.10, 0.10, 0.5, 25)}
 ]; 
-for(let i=0; i< 20; i++){
+for(let i=0; i< 35; i++){
     createParticle(shape[Math.floor(Math.random() * 3)], );
 }
 postMessage({
