@@ -1,6 +1,7 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import ThreeBk from '../components/three/ThreeBk'
+import Head from 'next/head';
+import styles from '../styles/Home.module.css';
+import ThreeBk from '../components/three/ThreeBk';
+import Header from '../components/header/Header';
 
 export default function Home() {
   return (
@@ -10,7 +11,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ThreeBk />
-      <div className={styles.home}/>
+      <Header/>
       <div className={styles.transition} id="t1"/> 
       <div className={styles.project}/> 
       <div className={styles.transition} id="t2"/> 
