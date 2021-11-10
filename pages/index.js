@@ -2,6 +2,8 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import ThreeBk from '../components/three/ThreeBk';
 import Header from '../components/header/Header';
+import NavD from '../components/nav-d/NavD';
+import NavM from '../components/nav-m/NavM';
 
 export default function Home() {
   return (
@@ -25,6 +27,8 @@ export default function Home() {
       <div className={styles.transition} id="t6"/> 
       <div className={styles.contact}/>
       
+      <NavM />
+      <NavD />
     </div>
   )
 }

@@ -1,0 +1,98 @@
+.mainContainer{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0px;
+    left: 0px;
+}
+@media(min-width: 900px){
+    .mainContainer{
+        display: none;
+    }
+}
+
+.close{
+    position: absolute;
+    top:10px;
+    right: 10px;
+    overflow: hidden;
+    width: 10px;
+    height: 10px;
+    border-radius: 20%;
+    opacity: 0;
+    transition: 0.5s ease-in-out;
+}
+.open{
+    position: absolute;
+    top:0px;
+    right: 0px;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    opacity: 1;
+    transition: 0.5s ease-in-out;
+}
+.nav{
+    width: 100vw;
+    height: 100vh;
+    background-color: red;
+    margin: 0px;
+    background: url(../../public/bkmm.png) #fff;
+    background-size: 400px 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* transition: width 1s, height 1s; */
+
+}
+.nav ul{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    font-family: var(--roboto);
+    font-weight: bold;
+    font-size: 2.5rem;
+    text-align: center;
+}
+.nav li{
+    color: #4c0372;
+    display: block;
+    margin-bottom: 70px;
+}
+
+.mainContainer button{
+    position: absolute;
+    background-color: var(--bk-yellow);
+    border: solid black 3px;
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.bars{
+   fill: black;
+}
+
+.selector{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bk-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* clip-path: circle(55px at center 25vh); */
+    transition: clip-path 1s;
+}
+.selector li{
+    color: white;
+}
+.closeSelector{
+    display: none;
+}

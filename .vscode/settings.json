@@ -13,9 +13,12 @@
         "Scalar",
         "Scene",
         "Torus",
+        "Xlink",
         "aabb",
         "about",
+        "bars",
         "better",
+        "bkmm",
         "blender",
         "boundaries",
         "boxes",
@@ -55,6 +58,7 @@
         "subtitle",
         "textures",
         "traverse",
-        "wireframe"
+        "wireframe",
+        "xmlnsa"
     ]
 }

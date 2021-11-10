@@ -1,6 +1,8 @@
 :root{
   --arvo: 'Arvo', serif;
   --roboto: 'Roboto', sans-serif;
+  --bk-yellow: #fff800;
+  --bk-purple: #a32eef;
 }
 html,
 body {
