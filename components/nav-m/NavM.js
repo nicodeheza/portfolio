@@ -14,6 +14,7 @@ export default function NavM(){
     const aboutRef= useRef(null);
     const contactRef= useRef(null);
     const selectorRef= useRef(null);
+    const navRef= useRef(null);
 
     useEffect(()=>{
         function setPosition(){
@@ -23,18 +24,20 @@ export default function NavM(){
                         aboutRef.current.getBoundingClientRect() :
                         contactRef.current.getBoundingClientRect();
                         
-            const center= ((rect.bottom - rect.top) / 2 )+ rect.top;
+            const center= ((rect.bottom - rect.top) / 2 ) + rect.top;
             selectorRef.current.style.clipPath= `circle(55px at center ${center}px)`;
         }
-
+        const nav= navRef.current;
         if(open){
             setPosition();
+            nav.addEventListener("transitionend", setPosition, false);
         } 
-
         addEventListener("resize", setPosition, false);
-
-        return()=> removeEventListener("resize", setPosition, false);
-
+        return()=>{
+            removeEventListener("resize", setPosition, false);
+            nav.removeEventListener("transitionend", setPosition, false);
+        } 
+     
     },[selected, open]);
 
     function click(section){
@@ -45,21 +48,21 @@ export default function NavM(){
     }
     return(
         <div className={styles.mainContainer}>
-        <div className={open ? styles.open : styles.close}>
-        <nav className={styles.nav}>
-            <div ref={selectorRef} className={ styles.selector }>
+        <div className={open ? styles.open : styles.close} ref={navRef}>
+            <nav className={styles.nav}>
+                <div className={ styles.selector } ref={selectorRef}>
+                    <ul>
+                        <li><a href="#">Projects</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
                 <ul>
-                    <li><a href="#">Projects</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li ref={projectRef} onClick={()=>click(PROJECTS)}><a href="#">Projects</a></li>
+                    <li ref={aboutRef} onClick={()=>click(ABOUT)}><a href="#">About</a></li>
+                    <li ref={contactRef} onClick={()=>click(CONTACT)}><a href="#">Contact</a></li>
                 </ul>
-            </div>
-            <ul>
-                <li ref={projectRef} onClick={()=>click(PROJECTS)}><a href="#">Projects</a></li>
-                <li ref={aboutRef} onClick={()=>click(ABOUT)}><a href="#">About</a></li>
-                <li ref={contactRef} onClick={()=>click(CONTACT)}><a href="#">Contact</a></li>
-            </ul>
-        </nav>
+            </nav>
         </div>
         <button onClick={()=>setOpen((pass)=> !pass)}>
             <MenuBars classN={styles.bars}/>

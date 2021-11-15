@@ -196,7 +196,7 @@ export default function ThreeBk(){
                 ease:"power1.out"
             },
             invalidateOnRefresh: true, 
-            // markers: true,
+           // markers: true,
            onUpdate:()=>{
              camera.position.set(animateProps.posX, animateProps.posY, animateProps.posZ);
              camera.rotation.set(animateProps.rotX, animateProps.rotY, animateProps.rotZ);

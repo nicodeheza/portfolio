@@ -1,9 +1,11 @@
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
-import ThreeBk from '../components/three/ThreeBk';
-import Header from '../components/header/Header';
-import NavD from '../components/nav-d/NavD';
-import NavM from '../components/nav-m/NavM';
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import ThreeBk from "../components/three/ThreeBk";
+import Header from "../components/header/Header";
+import NavD from "../components/nav-d/NavD";
+import NavM from "../components/nav-m/NavM";
+import Projects from "../components/projects/Projects";
+import OthersProjects from "../components/othersProjects/OthersProjects";
 
 export default function Home() {
   return (
@@ -13,22 +15,34 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ThreeBk />
-      <Header/>
-      <div className={styles.transition} id="t1"/> 
-      <div className={styles.project}/> 
-      <div className={styles.transition} id="t2"/> 
-      <div className={styles.project}/> 
-      <div className={styles.transition} id="t3"/> 
-      <div className={styles.project}/>
-      <div className={styles.transition} id="t4"/> 
-      <div className={styles.project}/>
-      <div className={styles.transition} id="t5"/> 
-      <div className={styles.about}/>
-      <div className={styles.transition} id="t6"/> 
-      <div className={styles.contact}/>
-      
+      <Header />
+      <div className={styles.transition} id="t1" />
+      <Projects
+        title={"Project Title"}
+        subtitle={"Project Subtitle"}
+        imageSRC={"/lorem.jpg"}
+      />
+      <div className={styles.transition} id="t2" />
+      <Projects
+        title={"Project Title"}
+        subtitle={"Project Subtitle"}
+        imageSRC={"/lorem.jpg"}
+      />
+      <div className={styles.transition} id="t3" />
+      <Projects
+        title={"Project Title"}
+        subtitle={"Project Subtitle"}
+        imageSRC={"/lorem.jpg"}
+      />
+      <div className={styles.transition} id="t4" />
+      <OthersProjects />
+      <div className={styles.transition} id="t5" />
+      <div className={styles.about} />
+      <div className={styles.transition} id="t6" />
+      <div className={styles.contact} />
+
       <NavM />
       <NavD />
     </div>
-  )
+  );
 }
