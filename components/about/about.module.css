@@ -1,0 +1,99 @@
+.section {
+  width: 100wv;
+  height: 100vh;
+}
+.article {
+  /* border: solid red; */
+  width: 90%;
+  max-width: 900px;
+  height: 70%;
+  margin: auto;
+  margin-top: 3%;
+  position: relative;
+}
+.title {
+  background-color: var(--bk-yellow);
+  border: solid black 7px;
+  width: fit-content;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 1;
+}
+.title h1 {
+  font-size: var(--arvo);
+  font-size: 3rem;
+  margin: 20px 40px;
+}
+.title span {
+  color: var(--bk-yellow);
+  background-color: black;
+  padding: 0px 10px;
+}
+
+.text {
+  background-color: var(--bk-purple);
+  border: solid black 7px;
+  width: 80%;
+  max-height: 100%;
+  padding: 50px;
+  position: absolute;
+  top: 50px;
+  right: 0px;
+  overflow-y: auto;
+}
+.text p {
+  font-weight: 300;
+  line-height: 25px;
+}
+
+.text::-webkit-scrollbar {
+  width: 15px;
+}
+.text::-webkit-scrollbar-track {
+  background-color: var(--bk-purple);
+  border-left: solid 5px black;
+}
+.text::-webkit-scrollbar-thumb {
+  background-color: black;
+}
+
+@media (max-width: 700px) {
+  .title h1 {
+    font-size: 2rem;
+  }
+  .text p {
+    font-size: 0.9rem;
+  }
+}
+@media (max-width: 500px) {
+  .title h1 {
+    font-size: 1.5rem;
+  }
+  .text {
+    padding: 30px;
+    padding-top: 50px;
+  }
+  .article {
+    margin-top: 15%;
+  }
+}
+@media (max-width: 400px) {
+  .article {
+    margin-top: 18%;
+  }
+  .title h1 {
+    /* font-size: 1.2rem; */
+    margin: 15px;
+    padding: 0px;
+  }
+}
+@media (max-width: 350px) {
+  .text p {
+    font-size: 0.8rem;
+  }
+  .title h1 {
+    font-size: 1.4rem;
+    margin: 10px;
+  }
+}

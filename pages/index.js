@@ -6,6 +6,8 @@ import NavD from "../components/nav-d/NavD";
 import NavM from "../components/nav-m/NavM";
 import Projects from "../components/projects/Projects";
 import OthersProjects from "../components/othersProjects/OthersProjects";
+import About from "../components/about/About";
+import Contact from "../components/contact/Contact";
 
 export default function Home() {
   return (
@@ -37,9 +39,9 @@ export default function Home() {
       <div className={styles.transition} id="t4" />
       <OthersProjects />
       <div className={styles.transition} id="t5" />
-      <div className={styles.about} />
+      <About />
       <div className={styles.transition} id="t6" />
-      <div className={styles.contact} />
+      <Contact />
 
       <NavM />
       <NavD />
