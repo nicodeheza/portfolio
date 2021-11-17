@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import MenuBars from "../../svg/MenuBars";
 import styles from "./navM.module.css";
 
+const leng= "en";
+
 const PROJECTS="projects";
 const ABOUT= "about";
 const CONTACT= "contact";
@@ -62,6 +64,10 @@ export default function NavM(){
                     <li ref={aboutRef} onClick={()=>click(ABOUT)}><a href="#">About</a></li>
                     <li ref={contactRef} onClick={()=>click(CONTACT)}><a href="#">Contact</a></li>
                 </ul>
+            <div className={styles.language}>
+                <button className={leng === "en" ? styles.selected : ""}>EN</button>
+                <button className={leng === "es" ? styles.selected : ""}>ES</button>
+            </div>
             </nav>
         </div>
         <button onClick={()=>setOpen((pass)=> !pass)}>

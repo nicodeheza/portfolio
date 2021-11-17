@@ -98,3 +98,29 @@
 .closeSelector{
     display: none;
 }
+
+.language{
+    /* border: solid red; */
+    position: absolute;
+    bottom: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.language button{
+    position: initial;
+    margin: 0px 5px;
+    padding: 0px;
+    border: none;
+    /* margin: auto; */
+    background-color: white;
+    width: 20px;
+    height: 20px;
+}
+.selected{
+    border-radius: 0px !important;
+    background-color: black !important;
+    width: 30px !important;
+    height: 30px !important;
+    color: white;
+}
