@@ -39,6 +39,7 @@ export default function ThreeBk({setLoading}){
         }
         
         workerRef.current.onmessage= (e)=>{
+           // console.log("working");
             if(e.data.type === "forms"){
                 const forms= e.data.forms;
                 numOfShapes = forms.length;
