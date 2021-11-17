@@ -1,0 +1,149 @@
+.main{
+    margin: 0px;
+    padding: 0px;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background: url("../../public/bk.png") #fff;
+    background-size: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.out{
+    margin: 0px;
+    padding: 0px;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background: url("../../public/bk.png") #fff;
+    background-size: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: out 1s ease-out;
+}
+@keyframes out{
+    form{
+        opacity: 1;
+    }
+    to{
+        opacity: 0;
+    }
+}
+.content{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    width: fit-content;
+    position: relative;
+}
+.content h1{
+    margin: 0px;
+    grid-row: 1/2;
+    grid-column: 1/2;
+    font-family: var(--arvo);
+    color: var(--bk-yellow);
+    font-size: 10rem;
+    font-style: italic;
+    -webkit-text-stroke: 5px black;
+    z-index: 1;
+}
+
+.forms{
+    grid-row: 1/2;
+    grid-column: 1/2;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.circle{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: solid black 5px;
+    background-color: #67bd00;
+    animation: circle 3s ease-in infinite alternate;
+}
+@keyframes circle {
+  from{
+      transform: translate(-50%,25%);
+  }  
+  to{
+      transform: translate(100%, -25%);
+  }
+}
+.rect{
+    width: 100px;
+    height: 200px;
+    border: solid black 5px;
+    background-color: #00b6ff;
+    animation: rect 6s linear infinite ;
+}
+@keyframes rect {
+    from{
+        transform: rotate(0deg);
+    }  
+    to{
+        transform:rotate(360deg);
+    }
+  }
+
+.triangle{
+    width: 0px;
+    height: 0px;
+    border-left: 75px solid transparent;
+    border-right: 75px solid transparent;
+    border-bottom: 150px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: triangle 3s ease-in infinite alternate;
+}
+@keyframes triangle {
+    from{
+        transform: translate(50%,-25%) rotate(0deg);
+    }  
+    to{
+        transform: translate(-100%, 0%) rotate(360deg);
+    }
+  }
+.innerTriangle{
+    position: relative;
+    top: 77px;
+    right: -0.5px;
+    width: 0px;
+    height: 0px;
+    border-left: 67.5px solid transparent;
+    border-right: 67.5px solid transparent;
+    border-bottom: 135px solid #a55368;
+}
+
+
+@media(max-width:850px){
+
+    .content{
+        transform: scale(0.8);
+    }
+}
+@media(max-width:700px){
+
+    .content{
+        transform: scale(0.7);
+    }
+}
+@media(max-width:600px){
+    .content{
+        transform: scale(0.5);
+    }
+}
+@media(max-width:450px){
+    .content{
+        transform: scale(0.3);
+    }
+}

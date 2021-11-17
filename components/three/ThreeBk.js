@@ -1,16 +1,14 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-// import * as CANNON from "cannon-es";
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
-// import cannonDebugger from "cannon-es-debugger";
 import {gsap} from "gsap";
 import {ScrollTrigger} from "gsap/dist/ScrollTrigger";
 import styles from "./threeBk.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function ThreeBk(){
+export default function ThreeBk({setLoading}){
     const sceneContainer= useRef(null);
     const reqAnimFrame= useRef(null);
     const workerRef= useRef();
@@ -134,6 +132,7 @@ export default function ThreeBk(){
         loader.load('block02.glb', gltf=>{
             gltf.scene.scale.set(2,2,2);
             scene.add(gltf.scene);
+            setLoading(false);
         });
 
 

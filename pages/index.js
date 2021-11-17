@@ -8,15 +8,20 @@ import Projects from "../components/projects/Projects";
 import OthersProjects from "../components/othersProjects/OthersProjects";
 import About from "../components/about/About";
 import Contact from "../components/contact/Contact";
+import { useState } from "react";
+import Loading from "../components/loading/Loading";
 
 export default function Home() {
+  const [loading, setLoading]= useState(true);
+  const [showLoading, setShowLoading]= useState(true);
+
   return (
     <div className={styles.container} id="mainContainer">
       <Head>
         <title>Nicolas Deheza</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ThreeBk />
+      <ThreeBk setLoading={setLoading}/>
       <Header />
       <div className={styles.transition} id="t1" />
       <Projects
@@ -45,6 +50,9 @@ export default function Home() {
 
       <NavM />
       <NavD />
+      {
+        showLoading ? (<Loading loading={loading} setShowLoading={setShowLoading} />) : (null)
+      }
     </div>
   );
 }
