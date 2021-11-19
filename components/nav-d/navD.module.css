@@ -43,7 +43,6 @@
 
 .projects{
     position: absolute;
-    width: 90px;
     height: 40px;
     background-color: black;
     top: calc(50% - 20px);
@@ -54,11 +53,9 @@
 
 .about{
     position: absolute;
-    width: 80px;
     height: 40px;
     background-color: black;
     top: calc(50% - 20px);
-    margin-left: 80px;
     z-index: -1;
     transition: margin-left 0.5s;
     animation: about 0.5s ease-out;
@@ -66,11 +63,9 @@
 
 .contact{
     position: absolute;
-    width: 95px;
     height: 40px;
     background-color: black;
     top: calc(50% - 20px);
-    margin-left: 145px;
     z-index: -1;
     transition: margin-left 0.5s;
     animation: contact 0.5s ease-out;
