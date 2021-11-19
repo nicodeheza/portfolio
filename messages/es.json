@@ -1,0 +1,31 @@
+{
+    "Home": {
+        "subtitle": "Desarrollador Web",
+        "Nav":{
+            "projects": "Proyectos",
+            "about": "Sobre mi",
+            "contact": "Contacto"
+        },
+        "Article":{
+            "technologys":"Tecnologias:",
+            "code": "Codigo Fuente",
+            "demo": "Ver Demo"
+        },
+        "OthersProjects":{
+            "title": "Otros Proyectos"
+        }, 
+        "About":{
+            "title": "Sobre"
+        },
+        "Contact":{
+            "title": "Contacto",
+            "name":"Nombre*",
+            "email": "Email*",
+            "phone": "Telefono",
+            "message": "Mensaje*",
+            "send": "Enviar",
+            "required": "*Requerido"
+        }
+    }
+        
+}

@@ -1,13 +1,13 @@
 import styles from "./about.module.css"
 
 
-export default function About() {
+export default function About({title}) {
   return (
     <section className={styles.section}>
       <article className={styles.article}>
         <div className={styles.title}>
           <h1>
-            <span>About</span> Nicolás Deheza
+            <span>{title}</span> Nicolás Deheza
           </h1>
         </div>
         <div className={styles.text}>

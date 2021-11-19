@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import MenuBars from "../../svg/MenuBars";
 import styles from "./navM.module.css";
-
-const leng= "en";
+import {useRouter} from "next/router";
 
 const PROJECTS="projects";
 const ABOUT= "about";
 const CONTACT= "contact";
 
-export default function NavM(){
-
+export default function NavM({projects, about, contact}){
     const [open, setOpen]= useState(false);
     const [selected, setSelected]= useState(PROJECTS);
     const projectRef= useRef(null);
@@ -17,6 +15,7 @@ export default function NavM(){
     const contactRef= useRef(null);
     const selectorRef= useRef(null);
     const navRef= useRef(null);
+    const router= useRouter();
 
     useEffect(()=>{
         function setPosition(){
@@ -48,25 +47,41 @@ export default function NavM(){
             setOpen(false);
         }, 1000);
     }
+
+    function changeLeng(){
+        if(router.locale === "es"){
+            router.push("/", "/", {locale: "en"});
+            setOpen(false);
+        }else{
+            router.push("/", "/", {locale: "es"});
+            setOpen(false);
+        }
+    }
     return(
         <div className={styles.mainContainer}>
         <div className={open ? styles.open : styles.close} ref={navRef}>
             <nav className={styles.nav}>
                 <div className={ styles.selector } ref={selectorRef}>
                     <ul>
-                        <li><a href="#">Projects</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">{projects}</a></li>
+                        <li><a href="#">{about}</a></li>
+                        <li><a href="#">{contact}</a></li>
                     </ul>
                 </div>
                 <ul>
-                    <li ref={projectRef} onClick={()=>click(PROJECTS)}><a href="#">Projects</a></li>
-                    <li ref={aboutRef} onClick={()=>click(ABOUT)}><a href="#">About</a></li>
-                    <li ref={contactRef} onClick={()=>click(CONTACT)}><a href="#">Contact</a></li>
+                    <li ref={projectRef} onClick={()=>click(PROJECTS)}><a href="#">{projects}</a></li>
+                    <li ref={aboutRef} onClick={()=>click(ABOUT)}><a href="#">{about}</a></li>
+                    <li ref={contactRef} onClick={()=>click(CONTACT)}><a href="#">{contact}</a></li>
                 </ul>
             <div className={styles.language}>
-                <button className={leng === "en" ? styles.selected : ""}>EN</button>
-                <button className={leng === "es" ? styles.selected : ""}>ES</button>
+                <button className={router.locale === "en" ? styles.selected : ""}
+                onClick={()=>changeLeng()}>
+                EN
+                </button>
+                <button className={router.locale === "es" ? styles.selected : ""}
+                onClick={()=>changeLeng()}>
+                ES
+                </button>
             </div>
             </nav>
         </div>

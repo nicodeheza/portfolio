@@ -3,7 +3,7 @@ import Image from "next/image";
 import ndd from "../../public/ndd.svg";
 import ndm from "../../public/ndm.svg";
 
-export default function Header(){
+export default function Header({subtitle}){
 
     return(
         <header className={styles.headerContainer}>
@@ -16,7 +16,7 @@ export default function Header(){
                     <Image src={ndm} width="537" height="189" alt="nicolas"/>
                 </h1>
                 <div className={styles.subtitle}>
-                <h2>Web Developer</h2>
+                <h2>{subtitle}</h2>
                 </div>
             </div>
 

@@ -1,0 +1,31 @@
+{
+    "Home": {
+        "subtitle": "Web Developer",
+        "Nav":{
+            "projects": "Projects",
+            "about": "About",
+            "contact": "Contact"
+        },
+        "Article":{
+            "technologys":"Technologys:",
+            "code": "Source Code",
+            "demo": "Live Demo"
+        },
+        "OthersProjects":{
+            "title": "Others Projects"
+        }, 
+        "About":{
+            "title": "About"
+        },
+        "Contact":{
+            "title": "Contact",
+            "name":"Name*",
+            "email": "Email*",
+            "phone": "Phone",
+            "message": "Message*",
+            "send": "Send",
+            "required": "*Required"
+        }
+    }
+        
+}

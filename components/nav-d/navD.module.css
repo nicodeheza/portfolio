@@ -91,11 +91,13 @@
     background-color: transparent;
     cursor: pointer;
     width: 30px;
+    pointer-events: auto;
 }
 .selected{
     background-color: black !important;
     height: 30px;
     color: white;
+    pointer-events: none !important;
 }
 
 @keyframes projects{

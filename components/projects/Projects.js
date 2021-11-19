@@ -18,7 +18,7 @@ const technologys = [
   },
 ];
 
-export default function Projects({ title, subtitle, imageSRC }) {
+export default function Projects({ title, subtitle, imageSRC, text }) {
   const [showArticle, setShowArticle] = useState(false);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export default function Projects({ title, subtitle, imageSRC }) {
         </div>
       </div>
       {showArticle ? (
-        <Article setShowArticle={setShowArticle} technologys={technologys} />
+        <Article setShowArticle={setShowArticle} technologys={technologys} text={text} />
       ) : null}
     </section>
   );

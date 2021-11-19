@@ -20,7 +20,7 @@ const technologys = [
     },
   ];
 
-export default function OthersProjects(){
+export default function OthersProjects({title, text}){
 
     const [showArticle, setShowArticle] = useState(false);
 
@@ -28,7 +28,7 @@ export default function OthersProjects(){
         <section className={styles.main}>
             <div className={styles.content}>
             <div className={styles.title}>
-                <h1>Others Projects</h1>
+                <h1>{title}</h1>
             </div>
             <div className={styles.list}>
                 <ul>
@@ -42,7 +42,7 @@ export default function OthersProjects(){
             </div>
             {
                 showArticle ? 
-            (<Article technologys={technologys} setShowArticle={setShowArticle}/>) : (null)
+            (<Article technologys={technologys} setShowArticle={setShowArticle} text={text} />) : (null)
             
             }
 

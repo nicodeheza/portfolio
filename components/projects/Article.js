@@ -5,7 +5,7 @@ import GitHubLogo from "../../svg/GitHubLogo";
 import WebLogo from "../../svg/WebLogo";
 import { useState } from "react";
 
-export default function Article({setShowArticle, technologys}){
+export default function Article({setShowArticle, technologys, text}){
      const [eleMount, setEleMount]=useState( true );
 
     return(
@@ -35,7 +35,7 @@ export default function Article({setShowArticle, technologys}){
                     ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor 
                     in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at 
                     vero eros et accumsan et iusto </p>
-                    <h3>Technologys:</h3>
+                    <h3>{text[0]}</h3>
                     <div className={styles.logos}>
                     {
                             technologys.map((tech, i)=>(
@@ -46,8 +46,8 @@ export default function Article({setShowArticle, technologys}){
                         }
                     </div>
                     <div className={styles.links}>
-                        <a href="#">Source Code <GitHubLogo classN={styles.gitHubLogo}/></a>
-                        <a href="#">Live Demo <WebLogo classN={styles.webLogo}/></a>
+                        <a href="#">{text[1]} <GitHubLogo classN={styles.gitHubLogo}/></a>
+                        <a href="#">{text[2]} <WebLogo classN={styles.webLogo}/></a>
                     </div>
 
             </div>

@@ -116,6 +116,7 @@
     background-color: white;
     width: 20px;
     height: 20px;
+    pointer-events: auto;
 }
 .selected{
     border-radius: 0px !important;
@@ -123,4 +124,5 @@
     width: 30px !important;
     height: 30px !important;
     color: white;
+    pointer-events: none !important;
 }
