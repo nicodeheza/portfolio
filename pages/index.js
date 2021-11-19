@@ -35,6 +35,7 @@ export default function Home() {
     contact:0
   });
 
+  //get section pos 
   useEffect(()=>{
 
     function getPosition(ele){
@@ -46,10 +47,10 @@ export default function Home() {
       setSectionPos({
         projects:getPosition(document.getElementById(PROJECTS)), 
         about: getPosition(document.getElementById(ABOUT)), 
-        contact:  getPosition(document.getElementById(CONTACT))
+        contact:getPosition(document.getElementById(CONTACT))
       });
     }
-    
+
     onResize();
 
     window.addEventListener("resize", onResize, false);
@@ -57,10 +58,7 @@ export default function Home() {
     return ()=> window.removeEventListener("resize", onResize, false);
   },[]);
 
-  useEffect(()=>{
-    console.log(sectionsPos)
-  },[sectionsPos]);
-
+  //set nav selections
   useEffect(()=>{
     let pos= window.scrollY;
     const offset= window.innerHeight ;

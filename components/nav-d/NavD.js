@@ -36,7 +36,7 @@ export default function NavD({projects, about, contact, selected, pos}){
             //setSelected(id);
             if(id === PROJECTS){
                 window.scrollTo({
-                    top: pos.projects,
+                    top: pos.projects - offset + 2,
                     //behavior: "smooth"
                 });
             }else if( id === ABOUT){
