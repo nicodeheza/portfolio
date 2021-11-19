@@ -29,6 +29,7 @@
     color: white;
     margin-left: 5px;
     mix-blend-mode: exclusion;
+    cursor: pointer;
 }
 .nav ul::after{
     content: "";

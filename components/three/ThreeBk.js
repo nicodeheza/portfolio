@@ -5,10 +5,11 @@ import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 import {gsap} from "gsap";
 import {ScrollTrigger} from "gsap/dist/ScrollTrigger";
 import styles from "./threeBk.module.css";
+import {PROJECTS, ABOUT, CONTACT} from "../../constant/constant"
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function ThreeBk({setLoading}){
+export default function ThreeBk({setLoading, setSectionPos}){
     const sceneContainer= useRef(null);
     const reqAnimFrame= useRef(null);
     const workerRef= useRef();
@@ -699,8 +700,6 @@ export default function ThreeBk({setLoading}){
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);    
 
-            //ver resize pasa algo raro 
-            //ScrollTrigger.refresh();
             setTimelines();
         }
 

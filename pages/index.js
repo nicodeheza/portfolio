@@ -8,9 +8,11 @@ import Projects from "../components/projects/Projects";
 import OthersProjects from "../components/othersProjects/OthersProjects";
 import About from "../components/about/About";
 import Contact from "../components/contact/Contact";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Loading from "../components/loading/Loading";
 import {useTranslations} from "next-intl";
+import {PROJECTS, ABOUT, CONTACT} from "../constant/constant";
+
 
 export async function getStaticProps({locale}){
   const messages= await import(`../messages/${locale}.json`);
@@ -26,6 +28,59 @@ export default function Home() {
   const t= useTranslations('Home');
   const [loading, setLoading]= useState(true);
   const [showLoading, setShowLoading]= useState(true);
+  const[selected, setSelected]= useState(PROJECTS);
+  const [sectionsPos, setSectionPos]= useState({
+    projects:0,
+    about:0, 
+    contact:0
+  });
+
+  useEffect(()=>{
+
+    function getPosition(ele){
+       const pos=ele.getBoundingClientRect().top;
+       const scrollTop= window.scrollY;
+       return pos + scrollTop;
+    }
+    function onResize(){
+      setSectionPos({
+        projects:getPosition(document.getElementById(PROJECTS)), 
+        about: getPosition(document.getElementById(ABOUT)), 
+        contact:  getPosition(document.getElementById(CONTACT))
+      });
+    }
+    
+    onResize();
+
+    window.addEventListener("resize", onResize, false);
+
+    return ()=> window.removeEventListener("resize", onResize, false);
+  },[]);
+
+  useEffect(()=>{
+    console.log(sectionsPos)
+  },[sectionsPos]);
+
+  useEffect(()=>{
+    let pos= window.scrollY;
+    const offset= window.innerHeight ;
+
+    function onScroll(){
+        pos= window.scrollY;
+        if(pos < sectionsPos.about - offset && selected !== PROJECTS ){
+            setSelected(PROJECTS);
+        }else if( pos >= sectionsPos.about - offset && pos < sectionsPos.contact - offset && selected !== ABOUT){
+            setSelected(ABOUT);
+        }else if(pos >= sectionsPos.contact - offset && selected !== CONTACT){
+            setSelected(CONTACT);
+        }
+    }
+    window.addEventListener("scroll", onScroll, false);
+
+    return ()=>{
+        window.removeEventListener("scroll", onScroll, false);
+    }
+  },[selected, sectionsPos]);
 
   return (
     <div className={styles.container} id="mainContainer">
@@ -33,10 +88,11 @@ export default function Home() {
         <title>Nicolas Deheza</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ThreeBk setLoading={setLoading}/>
+      <ThreeBk setLoading={setLoading} setSectionPos={setSectionPos}/>
       <Header subtitle={t("subtitle")} />
-      <div className={styles.transition} id="t1" />
+      <div className={styles.transition} id="t1"/>
       <Projects
+        id={"projects"}
         title={"Project Title"}
         subtitle={"Project Subtitle"}
         imageSRC={"/lorem.jpg"}
@@ -57,23 +113,29 @@ export default function Home() {
         text={[t("Article.technologys"), t("Article.code"), t("Article.demo")]}
       />
       <div className={styles.transition} id="t4" />
-      <OthersProjects title={t("OthersProjects.title")} 
+      <OthersProjects 
+      title={t("OthersProjects.title")} 
       text={[t("Article.technologys"), t("Article.code"), t("Article.demo")]}/>
       <div className={styles.transition} id="t5" />
-      <About  title={t("About.title")}/>
+      <About id={"about"}  title={t("About.title")}/>
       <div className={styles.transition} id="t6" />
-      <Contact text={[t("Contact.name"), t("Contact.email"), t("Contact.phone"), t("Contact.message"),
+      <Contact id={"contact"} text={[t("Contact.name"), t("Contact.email"), t("Contact.phone"), t("Contact.message"),
        t("Contact.send"), t("Contact.required"), t("Contact.title")]} />
 
       <NavM 
       projects={t("Nav.projects")}
       about={t("Nav.about")}
       contact={t("Nav.contact")}
+      selected={selected}
+      pos={sectionsPos}
       />
       <NavD 
       projects={t("Nav.projects")}
       about={t("Nav.about")}
-      contact={t("Nav.contact")}/>
+      contact={t("Nav.contact")}
+      selected={selected}
+      pos={sectionsPos}
+      />
       {
         showLoading ? (<Loading loading={loading} setShowLoading={setShowLoading} />) : (null)
       }

@@ -1,19 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./navD.module.css";
 import {useRouter} from "next/router";
-const PROJECTS= "projects";
-const ABOUT= "about";
-const CONTACT= "contact";
+import {PROJECTS, ABOUT, CONTACT} from "../../constant/constant"
 
-
-export default function NavD({projects, about, contact}){
-    const[selected, setSelected]= useState(PROJECTS);
+export default function NavD({projects, about, contact, selected, pos}){
     const projectRef= useRef(null);
     const aboutRef= useRef(null);
     const contactRef= useRef(null);
     const selectorRef= useRef(null);
     const router= useRouter();
 
+    //selector transform
     useEffect(()=>{
         const projectWidth= projectRef.current.getBoundingClientRect().width;
         const aboutWidth= aboutRef.current.getBoundingClientRect().width;
@@ -31,6 +28,31 @@ export default function NavD({projects, about, contact}){
         }
     },[selected, router.locale]);
 
+
+    function goToId(id){
+        const h= window.innerHeight;
+        const offset= 3 * h / 100;
+        if(selected !== id){
+            //setSelected(id);
+            if(id === PROJECTS){
+                window.scrollTo({
+                    top: pos.projects,
+                    //behavior: "smooth"
+                });
+            }else if( id === ABOUT){
+                window.scrollTo({
+                    top: pos.about - offset,
+                   // behavior: "smooth"
+                });
+            }else if( id === CONTACT){
+                window.scroll({
+                    top: pos.contact - offset,
+                    //behavior: "smooth"
+                });
+            }
+        }
+    }
+
     function changeLeng(){
         if(router.locale === "es"){
             router.push("/", "/", {locale: "en"});
@@ -43,9 +65,9 @@ export default function NavD({projects, about, contact}){
         <div className={styles.mainContainer}>
             <nav className={styles.nav}>
                 <ul>
-                    <li ref={projectRef}><a href="#" onClick={()=>setSelected(PROJECTS)}>{projects}</a> / </li>
-                    <li ref={aboutRef}><a href="#" onClick={()=>setSelected(ABOUT)}>{about}</a> / </li>
-                    <li ref={contactRef}><a href="#" onClick={()=>setSelected(CONTACT)}>{contact}</a></li>
+                    <li ref={projectRef}><a onClick={()=>goToId(PROJECTS)}>{projects}</a> / </li>
+                    <li ref={aboutRef}><a onClick={()=>goToId(ABOUT)}>{about}</a> / </li>
+                    <li ref={contactRef}><a onClick={()=>goToId(CONTACT)}>{contact}</a></li>
                 </ul>
                 <div ref={selectorRef} className={selected === PROJECTS ? styles.projects : selected === ABOUT ? styles.about : styles.contact} />
             </nav>

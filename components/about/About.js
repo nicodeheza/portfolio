@@ -1,9 +1,9 @@
 import styles from "./about.module.css"
 
 
-export default function About({title}) {
+export default function About({id, title}) {
   return (
-    <section className={styles.section}>
+    <section id={id} className={styles.section}>
       <article className={styles.article}>
         <div className={styles.title}>
           <h1>

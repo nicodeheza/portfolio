@@ -2,14 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import MenuBars from "../../svg/MenuBars";
 import styles from "./navM.module.css";
 import {useRouter} from "next/router";
+import {PROJECTS, ABOUT, CONTACT} from "../../constant/constant"
 
-const PROJECTS="projects";
-const ABOUT= "about";
-const CONTACT= "contact";
-
-export default function NavM({projects, about, contact}){
+export default function NavM({projects, about, contact, selected, pos}){
     const [open, setOpen]= useState(false);
-    const [selected, setSelected]= useState(PROJECTS);
     const projectRef= useRef(null);
     const aboutRef= useRef(null);
     const contactRef= useRef(null);
@@ -17,6 +13,7 @@ export default function NavM({projects, about, contact}){
     const navRef= useRef(null);
     const router= useRouter();
 
+    //selector transform
     useEffect(()=>{
         function setPosition(){
             const rect= selected === PROJECTS ?
@@ -41,8 +38,29 @@ export default function NavM({projects, about, contact}){
      
     },[selected, open]);
 
-    function click(section){
-        setSelected(section);
+
+    function click(id){
+        const h= window.innerHeight;
+        const offset= 3 * h / 100;
+        if(selected !== id){
+            //setSelected(id);
+            if(id === PROJECTS){
+                window.scrollTo({
+                    top: pos.projects,
+                    //behavior: "smooth"
+                });
+            }else if( id === ABOUT){
+                window.scrollTo({
+                    top: pos.about - offset,
+                   // behavior: "smooth"
+                });
+            }else if( id === CONTACT){
+                window.scroll({
+                    top: pos.contact - offset,
+                    //behavior: "smooth"
+                });
+            }
+        }
         setTimeout(()=>{
             setOpen(false);
         }, 1000);
@@ -63,15 +81,15 @@ export default function NavM({projects, about, contact}){
             <nav className={styles.nav}>
                 <div className={ styles.selector } ref={selectorRef}>
                     <ul>
-                        <li><a href="#">{projects}</a></li>
-                        <li><a href="#">{about}</a></li>
-                        <li><a href="#">{contact}</a></li>
+                        <li><a>{projects}</a></li>
+                        <li><a>{about}</a></li>
+                        <li><a>{contact}</a></li>
                     </ul>
                 </div>
                 <ul>
-                    <li ref={projectRef} onClick={()=>click(PROJECTS)}><a href="#">{projects}</a></li>
-                    <li ref={aboutRef} onClick={()=>click(ABOUT)}><a href="#">{about}</a></li>
-                    <li ref={contactRef} onClick={()=>click(CONTACT)}><a href="#">{contact}</a></li>
+                    <li ref={projectRef} onClick={()=>click(PROJECTS)}><a>{projects}</a></li>
+                    <li ref={aboutRef} onClick={()=>click(ABOUT)}><a>{about}</a></li>
+                    <li ref={contactRef} onClick={()=>click(CONTACT)}><a>{contact}</a></li>
                 </ul>
             <div className={styles.language}>
                 <button className={router.locale === "en" ? styles.selected : ""}

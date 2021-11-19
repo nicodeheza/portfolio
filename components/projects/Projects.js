@@ -18,7 +18,7 @@ const technologys = [
   },
 ];
 
-export default function Projects({ title, subtitle, imageSRC, text }) {
+export default function Projects({ id, title, subtitle, imageSRC, text }) {
   const [showArticle, setShowArticle] = useState(false);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function Projects({ title, subtitle, imageSRC, text }) {
   }, [showArticle]);
 
   return (
-    <section className={styles.sectionContainer}>
+    <section id={id} className={styles.sectionContainer}>
       <div className={styles.eleContainer}>
         <div
           className={styles.titleContainer}
