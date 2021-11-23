@@ -77,7 +77,6 @@ export default function Home() {
         //show Tip
         if(pos > 20){
           setShowTip(false);
-          console.log("not Show")
         }else{
           setShowTip(true);
         }
