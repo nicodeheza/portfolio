@@ -79,3 +79,55 @@
     box-shadow: -10px 10px #23033d;
     z-index: -1;
 }
+
+.tip{
+    background-color: rgba(0, 0, 0, .3);
+    width: 300px;
+    padding: 15px 10px;
+    position: absolute;
+    bottom: 30px;
+    left: calc(50% - 150px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    text-align: center;
+    opacity: 1;
+    transition: opacity 1s;
+}
+.hidden{
+    background-color: rgba(0, 0, 0, .3);
+    width: 300px;
+    padding: 15px 10px;
+    position: absolute;
+    bottom: 30px;
+    left: calc(50% - 150px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 1s;
+}
+.tip span{
+    color: white;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+.arrows{
+    stroke: white;
+    stroke-width: 3px;
+    fill: none;
+    width: 20px;
+    height: 20px;
+}
+
+@media(max-width:300px){
+    .tip{
+        width: 200px;
+        left: calc(50% - 100px);
+    }
+}

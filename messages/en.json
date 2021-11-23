@@ -1,6 +1,7 @@
 {
     "Home": {
         "subtitle": "Web Developer",
+        "tip": "Scroll down slowly to see the projects",
         "Nav":{
             "projects": "Projects",
             "about": "About",

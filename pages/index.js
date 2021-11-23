@@ -34,6 +34,7 @@ export default function Home() {
     about:0, 
     contact:0
   });
+  const [showTip, setShowTip]= useState(true);
 
   //get section pos 
   useEffect(()=>{
@@ -72,6 +73,14 @@ export default function Home() {
         }else if(pos >= sectionsPos.contact - offset && selected !== CONTACT){
             setSelected(CONTACT);
         }
+
+        //show Tip
+        if(pos > 20){
+          setShowTip(false);
+          console.log("not Show")
+        }else{
+          setShowTip(true);
+        }
     }
     window.addEventListener("scroll", onScroll, false);
 
@@ -87,7 +96,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ThreeBk setLoading={setLoading} setSectionPos={setSectionPos}/>
-      <Header subtitle={t("subtitle")} />
+      <Header subtitle={t("subtitle")} tip={t("tip")} showTip={showTip}/>
       <div className={styles.transition} id="t1"/>
       <Projects
         id={"projects"}

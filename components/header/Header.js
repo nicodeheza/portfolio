@@ -2,8 +2,9 @@ import styles from "./header.module.css";
 import Image from "next/image";
 import ndd from "../../public/ndd.svg";
 import ndm from "../../public/ndm.svg";
+import Arrows from "../../svg/Arrows";
 
-export default function Header({subtitle}){
+export default function Header({subtitle, tip, showTip}){
 
     return(
         <header className={styles.headerContainer}>
@@ -18,6 +19,11 @@ export default function Header({subtitle}){
                 <div className={styles.subtitle}>
                 <h2>{subtitle}</h2>
                 </div>
+            </div>
+
+            <div className={showTip ? styles.tip : styles.hidden}>
+                <span>{tip}</span>
+                <Arrows classN={styles.arrows} />
             </div>
 
         </header>

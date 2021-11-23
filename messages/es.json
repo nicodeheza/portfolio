@@ -1,6 +1,7 @@
 {
     "Home": {
         "subtitle": "Desarrollador Web",
+        "tip": "Desplácese lentamente hacia abajo para ver los proyectos",
         "Nav":{
             "projects": "Proyectos",
             "about": "Sobre mi",
