@@ -2,25 +2,25 @@
     "Home": {
         "subtitle": "Web Developer",
         "tip": "Scroll down slowly to see the projects",
-        "Nav":{
+        "Nav": {
             "projects": "Projects",
             "about": "About",
             "contact": "Contact"
         },
-        "Article":{
-            "technologys":"Technologys:",
+        "Article": {
+            "technologys": "Technologys:",
             "code": "Source Code",
             "demo": "Live Demo"
         },
-        "OthersProjects":{
+        "OthersProjects": {
             "title": "Others Projects"
-        }, 
-        "About":{
+        },
+        "About": {
             "title": "About"
         },
-        "Contact":{
+        "Contact": {
             "title": "Contact",
-            "name":"Name*",
+            "name": "Name*",
             "email": "Email*",
             "phone": "Phone",
             "message": "Message*",
@@ -28,5 +28,4 @@
             "required": "*Required"
         }
     }
-        
 }

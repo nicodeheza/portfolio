@@ -2,25 +2,25 @@
     "Home": {
         "subtitle": "Desarrollador Web",
         "tip": "Desplácese lentamente hacia abajo para ver los proyectos",
-        "Nav":{
+        "Nav": {
             "projects": "Proyectos",
             "about": "Sobre mi",
             "contact": "Contacto"
         },
-        "Article":{
-            "technologys":"Tecnologias:",
+        "Article": {
+            "technologys": "Tecnologias:",
             "code": "Codigo Fuente",
             "demo": "Ver Demo"
         },
-        "OthersProjects":{
+        "OthersProjects": {
             "title": "Otros Proyectos"
-        }, 
-        "About":{
+        },
+        "About": {
             "title": "Sobre"
         },
-        "Contact":{
+        "Contact": {
             "title": "Contacto",
-            "name":"Nombre*",
+            "name": "Nombre*",
             "email": "Email*",
             "phone": "Telefono",
             "message": "Mensaje*",
@@ -28,5 +28,4 @@
             "required": "*Requerido"
         }
     }
-        
 }

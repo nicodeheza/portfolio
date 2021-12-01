@@ -1,24 +1,24 @@
-:root{
-  --arvo: 'Arvo', serif;
-  --roboto: 'Roboto', sans-serif;
-  --bk-yellow: #fff800;
-  --bk-purple: #a32eef;
-  --link-logo-color: #64b283;
-  --link-color: #e50000;
+:root {
+	--arvo: "Arvo", serif;
+	--roboto: "Roboto", sans-serif;
+	--bk-yellow: #fff800;
+	--bk-purple: #a32eef;
+	--link-logo-color: #64b283;
+	--link-color: #e50000;
 }
 html,
 body {
-  padding: 0;
-  margin: 0;
-  font-family: var(--roboto);
-  scroll-behavior: smooth;
+	padding: 0;
+	margin: 0;
+	font-family: var(--roboto);
+	scroll-behavior: smooth;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+	color: inherit;
+	text-decoration: none;
 }
 
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
