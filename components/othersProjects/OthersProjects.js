@@ -1,28 +1,27 @@
 import styles from "./othersProjects.module.css";
 import Article from "../projects/Article";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
-const projects=["Project Title 1", "Project Title 2", "Project Title 3", "Project Title 4", "Project Title 5",
-"Project Title 1", "Project Title 2", "Project Title 3", "Project Title 4", "Project Title 5"];
 
-const technologys = [
-    {
-      logo: "react.svg",
-      web: "https://reactjs.org/",
-    },
-    {
-      logo: "express.svg",
-      web: "https://expressjs.com/",
-    },
-    {
-      logo: "mongo.svg",
-      web: "https://www.mongodb.com/",
-    },
-  ];
-
-export default function OthersProjects({title, text}){
+export default function OthersProjects({title, text, projectsData}){
 
     const [showArticle, setShowArticle] = useState(false);
+    const [ArticleIndex, setArticleIndex]= useState(0);
+
+    useEffect(() => {
+        const mainContainer = document.querySelector("body");
+    
+        if (showArticle) {
+          mainContainer.style.overflowY = "hidden";
+        } else {
+          mainContainer.style.overflowY = "auto";
+        }
+      }, [showArticle]);
+
+    function article(index){
+        setArticleIndex(index);
+        setShowArticle(true);
+    }
 
     return(
         <section className={styles.main}>
@@ -33,8 +32,8 @@ export default function OthersProjects({title, text}){
             <div className={styles.list}>
                 <ul>
                     {
-                        projects.map((p, i)=>(
-                            <li key={i} onClick={()=>setShowArticle(true)}>{p}</li>
+                        projectsData.map((p, i)=>(
+                            <li key={i} onClick={()=>article(i)}>{p.title}</li>
                         ))
                     }
                 </ul>
@@ -42,7 +41,13 @@ export default function OthersProjects({title, text}){
             </div>
             {
                 showArticle ? 
-            (<Article technologys={technologys} setShowArticle={setShowArticle} text={text} />) : (null)
+            (
+            <Article
+            setShowArticle={setShowArticle} 
+            text={text} 
+            projectData={projectsData[ArticleIndex]}
+            />
+            ) : (null)
             
             }
 

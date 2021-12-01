@@ -80,7 +80,7 @@
 .videoContainer{
     /* border: solid; */
     grid-column: 1 / 2;
-    grid-row: 1 / span 5;
+    grid-row: 2 / 3;
     height: fit-content;
     align-self: center;
     padding: 5%;
@@ -100,15 +100,18 @@
     top: 0;
     width: 100%;
 }
+.img{
+    border: solid black 10px;
+}
 .contentContainer h1{
     font-family: var(--arvo);
-    font-size: 3rem;
+    font-size: 2.5rem;
     color: black;
     margin: 0px;
     grid-column: 2 / 3;
     grid-row:  1 / 2;
 }
-.contentContainer p{
+.text{
     margin: 0px;
     margin-top: 10px;
     padding-right: 10%;
@@ -145,6 +148,7 @@
 }
 .logos img{
     width: fit-content;
+    max-width: 100px;
     height: 30px;
 }
 .links{
@@ -194,11 +198,11 @@
         grid-column: 1 / 2;
         grid-row: 2 / 3;
     }
-    .contentContainer p{
+    .text{
         grid-column: 1 / 2;
         grid-row:  3 / 4;
-       margin: 0px;
-       padding: 0px 5px;
+        margin: 0px;
+        padding: 0px 5px;
     }
     .contentContainer h3{
         grid-column: 1 / 2;
@@ -211,6 +215,12 @@
     .links{
         grid-column: 1 / 2;
         grid-row:  6 / 7 ;
+    }
+    .gitHubLogo, .webLogo{
+        max-width: 20px;
+    }
+    .links a{
+      font-size: 12px;
     }
 }
 @media(max-width:800px){

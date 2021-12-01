@@ -11,20 +11,33 @@ import Contact from "../components/contact/Contact";
 import { useState, useEffect } from "react";
 import Loading from "../components/loading/Loading";
 import {useTranslations} from "next-intl";
-import {PROJECTS, ABOUT, CONTACT} from "../constant/constant";
+import {PROJECTS, ABOUT, CONTACT, STRAPI_URL} from "../constant/constant";
+import updateImages from "../functions/updateImages";
 
 
 export async function getStaticProps({locale}){
   const messages= await import(`../messages/${locale}.json`);
-  //console.log(locale);
+
+  const ResProjects= await fetch(`${STRAPI_URL}/projects?_locale=${locale}`);
+  let projectsData= await ResProjects.json();
+  projectsData= projectsData.sort((p1, p2)=> p1.order - p2.order);
+
+  const resAbout= await fetch(`${STRAPI_URL}/about?_locale=${locale}`);
+  const aboutObj= await resAbout.json();
+  const aboutText= aboutObj.text;
+
+  updateImages(projectsData, "D:/Documents/aprendiendo web/proyectos/porfolio/next_app/porfolio/public/strapiImg");
+  //console.log(projectsData);
   return{
     props:{
-      messages: messages.default
+      messages: messages.default, 
+      projectsData, 
+      aboutText
     }
   }
 }
 
-export default function Home() {
+export default function Home({projectsData, aboutText}) {
   const t= useTranslations('Home');
   const [loading, setLoading]= useState(true);
   const [showLoading, setShowLoading]= useState(true);
@@ -99,32 +112,35 @@ export default function Home() {
       <div className={styles.transition} id="t1"/>
       <Projects
         id={"projects"}
-        title={"Project Title"}
-        subtitle={"Project Subtitle"}
+        projectData={projectsData[0]}
         imageSRC={"/lorem.jpg"}
         text={[t("Article.technologys"), t("Article.code"), t("Article.demo")]}
       />
       <div className={styles.transition} id="t2" />
       <Projects
-        title={"Project Title"}
-        subtitle={"Project Subtitle"}
+        projectData={projectsData[1]}
         imageSRC={"/lorem.jpg"}
         text={[t("Article.technologys"), t("Article.code"), t("Article.demo")]}
       />
       <div className={styles.transition} id="t3" />
       <Projects
-        title={"Project Title"}
-        subtitle={"Project Subtitle"}
+        projectData={projectsData[2]}
         imageSRC={"/lorem.jpg"}
         text={[t("Article.technologys"), t("Article.code"), t("Article.demo")]}
       />
       <div className={styles.transition} id="t4" />
+
+      {/*add project data. dont work without it! */}
       <OthersProjects 
       title={t("OthersProjects.title")} 
-      text={[t("Article.technologys"), t("Article.code"), t("Article.demo")]}/>
+      text={[t("Article.technologys"), t("Article.code"), t("Article.demo")]}
+      projectsData={projectsData.slice(3)}
+      />
       <div className={styles.transition} id="t5" />
-      <About id={"about"}  title={t("About.title")}/>
+
+      <About id={"about"}  title={t("About.title")} text={aboutText} />
       <div className={styles.transition} id="t6" />
+
       <Contact id={"contact"} text={[t("Contact.name"), t("Contact.email"), t("Contact.phone"), t("Contact.message"),
        t("Contact.send"), t("Contact.required"), t("Contact.title")]} />
 
