@@ -102,6 +102,10 @@
 }
 .img {
 	border: solid black 10px;
+	background-color: black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .contentContainer h1 {
 	font-family: var(--arvo);
