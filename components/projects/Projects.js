@@ -3,7 +3,7 @@ import styles from "./projects.module.css";
 import Article from "./Article";
 import {useEffect, useState} from "react";
 
-export default function Projects({id, projectData, imageSRC, text}) {
+export default function Projects({id, projectData, text}) {
 	const [showArticle, setShowArticle] = useState(false);
 
 	useEffect(() => {

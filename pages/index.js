@@ -118,19 +118,16 @@ export default function Home({projectsData, aboutText}) {
 			<Projects
 				id={"projects"}
 				projectData={projectsData[0]}
-				imageSRC={"/lorem.jpg"}
 				text={[t("Article.technologys"), t("Article.code"), t("Article.demo")]}
 			/>
 			<div className={styles.transition} id="t2" />
 			<Projects
 				projectData={projectsData[1]}
-				imageSRC={"/lorem.jpg"}
 				text={[t("Article.technologys"), t("Article.code"), t("Article.demo")]}
 			/>
 			<div className={styles.transition} id="t3" />
 			<Projects
 				projectData={projectsData[2]}
-				imageSRC={"/lorem.jpg"}
 				text={[t("Article.technologys"), t("Article.code"), t("Article.demo")]}
 			/>
 			<div className={styles.transition} id="t4" />
