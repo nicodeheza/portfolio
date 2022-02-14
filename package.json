@@ -19,6 +19,7 @@
     "three": "^0.133.1"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^4.2.6",
     "cannon-es-debugger": "^0.1.4",
     "eslint": "8.0.1",
     "eslint-config-next": "11.1.2"
