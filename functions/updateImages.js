@@ -1,9 +1,11 @@
 import fs from "fs";
+import path from "path";
 import {STRAPI_URL} from "../constant/constant";
 
 export default async function updateImages(projectsData, imgPath) {
 	const projectImageNames = projectsData.map((p) => p.thumbnail.hash + p.thumbnail.ext);
-	fs.readdir(imgPath, (err, files) => {
+	const completePath = path.join(process.cwd(), imgPath);
+	fs.readdir(completePath, (err, files) => {
 		if (err) {
 			console.log(err);
 		} else {
@@ -11,7 +13,7 @@ export default async function updateImages(projectsData, imgPath) {
 				files.forEach((file) => {
 					const index = projectImageNames.findIndex((e) => e === file);
 					if (index < 0) {
-						fs.unlink(imgPath + "/" + file, (err) => {
+						fs.unlink(completePath + "/" + file, (err) => {
 							if (err) {
 								console.log(err);
 							} else {
@@ -27,7 +29,7 @@ export default async function updateImages(projectsData, imgPath) {
 			if (projectImageNames.length > 0) {
 				projectImageNames.forEach((ele) => {
 					const url = STRAPI_URL + "/uploads/" + ele;
-					const path = imgPath + "/" + ele;
+					const path = completePath + "/" + ele;
 					download(url, path, () => console.log(`${ele} download`));
 				});
 			}

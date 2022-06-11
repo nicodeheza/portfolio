@@ -25,10 +25,7 @@ export async function getStaticProps({locale}) {
 	const aboutObj = await resAbout.json();
 	const aboutText = aboutObj.text;
 
-	updateImages(
-		projectsData,
-		"D:/Documents/aprendiendo web/proyectos/porfolio/next_app/porfolio/public/strapiImg"
-	);
+	updateImages(projectsData, "/public/strapiImg");
 	//console.log(projectsData);
 	return {
 		props: {
